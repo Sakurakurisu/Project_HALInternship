@@ -305,7 +305,7 @@ TEST(LinkedListTest, RemoveWithConstIteratorTest)
 	list.Insert(list.End(), 10);
 
 	// 以下はコンパイルエラーになるためコメントアウト
-	// auto it = list.Remove(list.CBegin());  // コンパイルエラー
+	// auto it = list.Remove(list.CBegin());
 }
 
 /// <summary>
@@ -340,8 +340,8 @@ TEST(LinkedListTest, BeginOnEmptyListTest)
 	// 空リストで Begin() を呼び出す
 	auto it = list.Begin();
 
-	// 空リストなので要素数は0
-	EXPECT_EQ(0, list.Count());
+	//ダミーノードを指すイテレータが返る
+	EXPECT_EQ(it, list.End());
 }
 
 /// <summary>
@@ -390,16 +390,19 @@ TEST(LinkedListTest, BeginAfterInsertTest)
 
 	//先頭に挿入
 	list.Insert(list.Begin(), 0);
-	EXPECT_EQ(0, *list.CBegin());
+	//先頭要素を指すイテレータが返る
+	EXPECT_EQ(0, *list.Begin());
 
 
 	//中央に挿入
 	list.Insert(it, 20);
-	EXPECT_EQ(0, *list.CBegin());
+	//先頭要素を指すイテレータが返る
+	EXPECT_EQ(0, *list.Begin());
 
 	//末尾に挿入
 	list.Insert(list.End(), 50);
-	EXPECT_EQ(0, *list.CBegin());
+	//先頭要素を指すイテレータが返る
+	EXPECT_EQ(0, *list.Begin());
 }
 
 /// <summary>
@@ -415,16 +418,18 @@ TEST(LinkedListTest, BeginAfterRemoveTest)
 
 	// 先頭に削除
 	list.Remove(list.Begin());
-	EXPECT_EQ(20, *list.CBegin());
+	//先頭要素を指すイテレータが返る
+	EXPECT_EQ(20, *list.Begin());
 
 	//中央に削除
 	it = list.Remove(it);
-	EXPECT_EQ(40, *it);
+	//先頭要素を指すイテレータが返る
+	EXPECT_EQ(20, *list.Begin());
 
 	//末尾に削除
 	list.Remove(list.End());
-	// End() は末尾を指すので削除できない可能性がある
-	EXPECT_EQ(2, list.Count());
+	//先頭要素を指すイテレータが返る
+	EXPECT_EQ(20, *list.Begin());
 }
 
 /// <summary>
@@ -438,7 +443,707 @@ TEST(LinkedListTest, BeginConstCheckTest)
 	const LinkedList<int>& constList = list;
 
 	// 以下はコンパイルエラーになるためコメントアウト
-	// auto it = constList.Begin();  // コンパイルエラー：constオブジェクトから非constメソッドは呼べない
+	// auto it = constList.Begin();
 }
+
+#pragma endregion
+
+#pragma region 先頭コンストイテレータの取得
+
+/// <summary>
+/// ID_29 リストが空である場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, BeginConstOnEmptyListTest)
+{
+	LinkedList<int> list;
+
+	// 空リストで CBegin() を呼び出す
+	auto it = list.CBegin();
+
+	//ダミーノードを指すコンストイテレータが返る
+	EXPECT_EQ(it, list.CEnd());
+}
+
+/// <summary>
+/// ID_30 リストに要素が一つある場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, BeginConstOnNonEmptyListTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+
+	// CBegin() を呼び出す
+	auto it = list.CBegin();
+
+	//先頭要素を指すコンストイテレータが返る
+	EXPECT_EQ(10, *it);
+}
+
+/// <summary>
+/// ID_31 リストに二つ以上の要素がある場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, BeginConstOnMultipleElementsListTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	list.Insert(list.End(), 30);
+
+	// CBegin() を呼び出す
+	auto it = list.CBegin();
+
+	//先頭要素を指すコンストイテレータが返る
+	EXPECT_EQ(10, *it);
+}
+
+/// <summary>
+/// ID_32 データの挿入を行った後に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, BeginConstAfterInsertTest)
+{
+	LinkedList<int> list;
+
+	list.Insert(list.End(), 10);
+	auto it = list.Insert(list.End(), 30);
+	list.Insert(list.End(), 40);
+
+
+	//先頭に挿入
+	list.Insert(list.Begin(), 0);
+	//先頭要素を指すコンストイテレータが返る
+	EXPECT_EQ(0, *list.CBegin());
+
+
+	//中央に挿入
+	list.Insert(it, 20);
+	//先頭要素を指すコンストイテレータが返る
+	EXPECT_EQ(0, *list.CBegin());
+
+	//末尾に挿入
+	list.Insert(list.End(), 50);
+	//先頭要素を指すコンストイテレータが返る
+	EXPECT_EQ(0, *list.CBegin());
+}
+
+/// <summary>
+/// ID_33 データの削除を行った後に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, BeginConstAfterRemoveTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	auto it = list.Insert(list.End(), 30);
+	list.Insert(list.End(), 40);
+
+	// 先頭に削除
+	list.Remove(list.Begin());
+	//先頭要素を指すコンストイテレータが返る
+	EXPECT_EQ(20, *list.CBegin());
+
+	//中央に削除
+	it = list.Remove(it);
+	//先頭要素を指すコンストイテレータが返る
+	EXPECT_EQ(20, *list.CBegin());
+
+	//末尾に削除
+	list.Remove(list.End());
+	//先頭要素を指すコンストイテレータが返る
+	EXPECT_EQ(20, *list.CBegin());
+}
+
+/// <summary>
+/// ID_34 constのメソッドであるか
+/// </summary>
+TEST(LinkedListTest, ConstIteratorBeginConstCheckTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+
+	const LinkedList<int>& constList = list;
+
+	// コンパイルエラーなし
+	auto it = constList.CBegin();
+}
+
+
+#pragma endregion
+
+#pragma region 末尾イテレータの取得
+
+/// <summary>
+/// ID_35 リストが空である場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndOnEmptyListTest)
+{
+	LinkedList<int> list;
+
+	// 空リストで End() を呼び出す
+	auto it = list.End();
+
+	//ダミーノードを指すイテレータが返る
+	EXPECT_EQ(it, list.End());
+}
+
+/// <summary>
+/// ID_36 リストに要素が一つある場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndOnNonEmptyListTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+
+	auto it = list.End();
+
+	//末尾を指すイテレータが返る
+	EXPECT_EQ(it, list.End());
+}
+
+/// <summary>
+/// ID_37 リストに二つ以上の要素がある場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndOnMultipleElementsListTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	list.Insert(list.End(), 30);
+
+	auto it = list.End();
+
+	//末尾を指すイテレータが返る
+	EXPECT_EQ(it, list.End());
+}
+
+/// <summary>
+/// ID_38 データの挿入を行った後に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndAfterInsertTest)
+{
+	LinkedList<int> list;
+
+	list.Insert(list.End(), 10);
+	auto it = list.Insert(list.End(), 30);
+	list.Insert(list.End(), 40);
+
+
+	//先頭に挿入
+	list.Insert(list.Begin(), 0);
+
+	auto endIt = list.End();
+	//末尾を指すイテレータが返る
+	EXPECT_EQ(endIt, list.End());
+
+	//中央に挿入
+	list.Insert(it, 20);
+	endIt = list.End();
+	//末尾を指すイテレータが返る
+	EXPECT_EQ(endIt, list.End());
+
+	//末尾に挿入
+	list.Insert(list.End(), 50);
+	endIt = list.End();
+	//末尾を指すイテレータが返る
+	EXPECT_EQ(endIt, list.End());
+}
+
+/// <summary>
+/// ID_39 データの削除を行った後に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndAfterRemoveTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	auto it = list.Insert(list.End(), 30);
+	list.Insert(list.End(), 40);
+
+	// 先頭に削除
+	list.Remove(list.Begin());
+	auto endIt = list.End();
+	//末尾を指すイテレータが返る
+	EXPECT_EQ(endIt, list.End());
+
+	//中央に削除
+	it = list.Remove(it);
+	endIt = list.End();
+	//末尾を指すイテレータが返る
+	EXPECT_EQ(endIt, list.End());
+
+	//末尾に削除
+	list.Remove(list.End());
+	endIt = list.End();
+	//末尾を指すイテレータが返る
+	EXPECT_EQ(endIt, list.End());
+}
+
+/// <summary>
+/// ID_40 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
+/// </summary>
+TEST(LinkedListTest, EndCheckTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+
+	const LinkedList<int>& constList = list;
+
+	// 以下はコンパイルエラーになるためコメントアウト
+	// auto it = constList.End();
+}
+
+#pragma endregion
+
+#pragma region 末尾コンストイテレータの取得
+
+/// <summary>
+/// ID_41 リストが空である場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndConstOnEmptyListTest)
+{
+	LinkedList<int> list;
+
+	// 空リストで End() を呼び出す
+	auto it = list.CEnd();
+
+	//ダミーノードを指すコンストイテレータが返る
+	EXPECT_EQ(it, list.CEnd());
+}
+
+/// <summary>
+/// ID_42 リストに要素が一つある場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndConstOnNonEmptyListTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+
+	auto it = list.CEnd();
+
+	//末尾を指すコンストイテレータが返る
+	EXPECT_EQ(it, list.CEnd());
+}
+
+/// <summary>
+/// ID_43 リストに二つ以上の要素がある場合に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndConstOnMultipleElementsListTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	list.Insert(list.End(), 30);
+
+	auto it = list.CEnd();
+
+	//末尾を指すコンストイテレータが返る
+	EXPECT_EQ(it, list.CEnd());
+}
+
+/// <summary>
+/// ID_44 データの挿入を行った後に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndConstAfterInsertTest)
+{
+	LinkedList<int> list;
+
+	list.Insert(list.End(), 10);
+	auto it = list.Insert(list.End(), 30);
+	list.Insert(list.End(), 40);
+
+
+	//先頭に挿入
+	list.Insert(list.Begin(), 0);
+
+	auto endIt = list.CEnd();
+	//末尾を指すコンストイテレータが返る
+	EXPECT_EQ(endIt, list.CEnd());
+
+	//中央に挿入
+	list.Insert(it, 20);
+	endIt = list.CEnd();
+	//末尾を指すコンストイテレータが返る
+	EXPECT_EQ(endIt, list.CEnd());
+
+	//末尾に挿入
+	list.Insert(list.End(), 50);
+	endIt = list.CEnd();
+	//末尾を指すコンストイテレータが返る
+	EXPECT_EQ(endIt, list.CEnd());
+}
+
+/// <summary>
+/// ID_45 データの削除を行った後に、呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, EndConstAfterRemoveTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	auto it = list.Insert(list.End(), 30);
+	list.Insert(list.End(), 40);
+
+	// 先頭に削除
+	list.Remove(list.Begin());
+	auto endIt = list.CEnd();
+	//末尾を指すコンストイテレータが返る
+	EXPECT_EQ(endIt, list.CEnd());
+
+	//中央に削除
+	it = list.Remove(it);
+	endIt = list.CEnd();
+	//末尾を指すコンストイテレータが返る
+	EXPECT_EQ(endIt, list.CEnd());
+
+	//末尾に削除
+	list.Remove(list.End());
+	endIt = list.CEnd();
+	//末尾を指すコンストイテレータが返る
+	EXPECT_EQ(endIt, list.CEnd());
+}
+
+/// <summary>
+/// ID_46 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
+/// </summary>
+TEST(LinkedListTest, EndConstCheckTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+
+	const LinkedList<int>& constList = list;
+
+	// 以下はコンパイルエラーなし
+	auto it = constList.CEnd();
+}
+
+#pragma endregion
+
+#pragma region イテレータの指す要素を取得する
+
+/// <summary>
+/// ID_0 リストの参照がない状態で呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, DereferenceInvalidIteratorTest)
+{
+	LinkedList<int>::Iterator it;
+
+	// Assert発生
+	EXPECT_THROW(*it, std::runtime_error);
+}
+
+/// <summary>
+/// ID_1 Iteratorから取得した要素に対して、値の代入が行えるかをチェック
+/// </summary>
+TEST(LinkedListTest, IteratorModifyValueTest)
+{
+	LinkedList<int> list;
+	auto it = list.Insert(list.End(), 10);
+
+	EXPECT_EQ(10, *it);
+
+	*it = 20;
+
+	EXPECT_EQ(20, *it);
+}
+
+/// <summary>
+/// ID_2 ConstIteratorから取得した要素に対して、値の代入が行えないかをチェック
+/// </summary>
+TEST(LinkedListTest, ConstIteratorCannotModifyValueTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+
+	auto it = list.CBegin();
+
+	// 以下はコンパイルエラーになるためコメントアウト
+	// *it = 20;
+}
+
+/// <summary>
+/// ID_3 リストが空の際の、先頭イテレータに対して呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, DereferenceBeginOnEmptyListTest)
+{
+	LinkedList<int> list;
+
+	auto it = list.Begin();
+
+	// Assert発生
+	EXPECT_THROW(*it, std::runtime_error);
+}
+
+/// <summary>
+/// ID_4 末尾イテレータに対して呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, DereferenceEndIteratorTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+
+	auto it = list.End();
+
+	// Assert発生
+	EXPECT_THROW(*it, std::runtime_error);
+}
+
+#pragma endregion
+
+#pragma region イテレータをリストの末尾に向かって一つ進める
+
+/// <summary>
+/// ID_5 リストの参照がない状態で呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, IncrementInvalidIteratorTest)
+{
+	LinkedList<int>::Iterator it;
+
+	// Assert発生
+	EXPECT_THROW(++it, std::runtime_error);
+}
+
+/// <summary>
+/// ID_6 リストが空の際の、先頭イテレータに対して呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, IncrementBeginOnEmptyListTest)
+{
+	LinkedList<int> list;
+	auto it = list.Begin();
+
+	// Assert発生
+	EXPECT_THROW(++it, std::runtime_error);
+}
+
+/// <summary>
+/// ID_7 末尾イテレータに対して呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, IncrementEndIteratorTest)
+{
+	LinkedList<int> list;
+
+	auto it = list.End();
+
+	// Assert発生
+	EXPECT_THROW(++it, std::runtime_error);
+}
+
+/// <summary>
+/// ID_8 リストに二つ以上の要素がある場合に呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, IncrementOnMultipleElementsListTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	list.Insert(list.End(), 30);
+
+	auto it = list.Begin();
+	EXPECT_EQ(10, *it);
+
+	// 次の要素に進める
+	++it;
+	EXPECT_EQ(20, *it);
+
+	// 次の要素に進める
+	++it;
+	EXPECT_EQ(30, *it);
+
+	// 末尾に到達
+	++it;
+	EXPECT_EQ(it, list.End());
+}
+
+/// <summary>
+/// ID_9 前置インクリメントを行った際の挙動(++演算子オーバーロードで実装した場合)
+/// </summary>
+TEST(LinkedListTest, PreIncrementReturnValueTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+
+	auto it = list.Begin();
+	// インクリメント前の値
+	EXPECT_EQ(10, *it);
+
+	// 前置インクリメント:インクリメント後の値を返す
+	auto& result = ++it;
+
+	// インクリメント後の値 次の要素を指す
+	EXPECT_EQ(20, *result);
+	EXPECT_EQ(20, *it);
+}
+
+/// <summary>
+/// ID_10 後置インクリメントを行った際の挙動(++演算子オーバーロードで実装した場合)
+/// </summary>
+TEST(LinkedListTest, PostIncrementReturnValueTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+
+	auto it = list.Begin();
+	// インクリメント前の値
+	EXPECT_EQ(10, *it);
+
+	// 後置インクリメント:インクリメント前の値を返す
+	auto result = it++;
+
+	// インクリメント後の値
+	EXPECT_EQ(10, *result);
+	EXPECT_EQ(20, *it);
+}
+
+#pragma endregion
+
+#pragma region イテレータをリストの先頭に向かって一つ進める
+
+/// <summary>
+/// ID_11 リストの参照がない状態で呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, DecrementInvalidIteratorTest)
+{
+	LinkedList<int>::Iterator it;
+
+	// Assert発生
+	EXPECT_THROW(--it, std::runtime_error);
+}
+
+/// <summary>
+/// ID_12 リストが空の際の、末尾イテレータに対して呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, DecrementBeginOnEmptyListTest)
+{
+	LinkedList<int> list;
+	auto it = list.End();
+
+	// Assert発生
+	EXPECT_THROW(--it, std::runtime_error);
+}
+
+/// <summary>
+/// ID_13 先頭イテレータに対して呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, DecrementEndIteratorTest)
+{
+	LinkedList<int> list;
+
+	auto it = list.Begin();
+
+	// Assert発生
+	EXPECT_THROW(--it, std::runtime_error);
+}
+
+/// <summary>
+/// ID_14 リストに二つ以上の要素がある場合に呼び出した際の挙動
+/// </summary>
+TEST(LinkedListTest, DecrementOnMultipleElementsListTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	auto it = list.Insert(list.End(), 30);
+
+	EXPECT_EQ(30, *it);
+
+	// 前の要素に進める
+	--it;
+	EXPECT_EQ(20, *it);
+
+	// 先頭に到達
+	--it;
+	EXPECT_EQ(10, *list.Begin());
+}
+
+/// <summary>
+/// ID_15 前置デクリメントを行った際の挙動( --演算子オーバーロードで実装した場合 )
+/// </summary>
+TEST(LinkedListTest, PreDecrementReturnValueTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	auto it = list.Insert(list.End(), 20);
+
+	// インクリメント前の値
+	EXPECT_EQ(20, *it);
+
+	// 前置インクリメント:インクリメント後の値を返す
+	auto& result = --it;
+
+	// インクリメント後の値 前の要素を指す
+	EXPECT_EQ(10, *result);
+	EXPECT_EQ(10, *it);
+}
+
+/// <summary>
+/// ID_16 後置デクリメントを行った際の挙動( --演算子オーバーロードで実装した場合 )
+/// </summary>
+TEST(LinkedListTest, PostDecrementReturnValueTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	auto it = list.Insert(list.End(), 20);
+
+	// インクリメント前の値
+	EXPECT_EQ(20, *it);
+
+	// 後置インクリメント:インクリメント前の値を返す
+	auto result = it--;
+
+	// インクリメント後の値
+	EXPECT_EQ(20, *result);
+	EXPECT_EQ(10, *it);
+}
+
+#pragma endregion
+
+#pragma region イテレータのコピーを行う
+
+/// <summary>
+/// ID_17 ConstIteratorから、Iteratorのコピーが作成されないかをチェック
+/// </summary>
+TEST(LinkedListTest, CannotCopyConstIteratorToIteratorTest)
+{
+	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+
+	auto constIt = list.CBegin();
+
+	// 以下はコンパイルエラーになるためコメントアウト
+	// LinkedList<int>::Iterator it = constIt;
+}
+
+/// <summary>
+/// ID_18 コピーコンストラクト後の値がコピー元と等しいことをチェック
+/// </summary>
+TEST(LinkedListTest, CopyConstructorTest)
+{
+	LinkedList<int> list;
+	auto it = list.Insert(list.End(), 10);
+
+	EXPECT_EQ(10, *it);
+
+	// コピーコンストラクタ
+	LinkedList<int>::Iterator itCopy = it;
+
+	// コピー元と同じ値を指している
+	EXPECT_EQ(10, *itCopy);
+	EXPECT_EQ(it, itCopy);
+}
+
+#pragma endregion
+
+#pragma region イテレータの代入を行う
+
+#pragma endregion
+
+#pragma region 二つのイテレータが同一のものであるか 比較を行う
+
+
+#pragma endregion
+
+#pragma region 二つのイテレータが異なるものであるか 比較を行う
+
 
 #pragma endregion

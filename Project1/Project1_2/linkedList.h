@@ -71,6 +71,76 @@ public:
 			}
 			return &(mNode->data);
 		}
+
+		/// <summary>
+		/// 前置インクリメント
+		/// </summary>
+		Iterator& operator++()
+		{
+			if (!mNode)
+			{
+				throw std::runtime_error("Invalid iterator");
+			}
+			mNode = mNode->next;
+			return *this;
+		}
+
+		/// <summary>
+		/// 後置インクリメント
+		/// </summary>
+		Iterator operator++(int)
+		{
+			if (!mNode)
+			{
+				throw std::runtime_error("Invalid iterator");
+			}
+			Iterator temp = *this;
+			mNode = mNode->next;
+			return temp;
+		}
+
+		/// <summary>
+		/// 前置デクリメント
+		/// </summary>
+		Iterator& operator--()
+		{
+			if (!mNode)
+			{
+				throw std::runtime_error("Invalid iterator");
+			}
+			mNode = mNode->prev;
+			return *this;
+		}
+
+		/// <summary>
+		/// 後置デクリメント
+		/// </summary>
+		Iterator operator--(int)
+		{
+			if (!mNode)
+			{
+				throw std::runtime_error("Invalid iterator");
+			}
+			Iterator temp = *this;
+			mNode = mNode->prev;
+			return temp;
+		}
+
+		/// <summary>
+		/// 等価比較
+		/// </summary>
+		bool operator==(const Iterator& other) const
+		{
+			return mNode == other.mNode;
+		}
+
+		/// <summary>
+		/// 非等価比較
+		/// </summary>
+		bool operator!=(const Iterator& other) const
+		{
+			return mNode != other.mNode;
+		}
 	};
 
 	/// <summary>
@@ -120,11 +190,26 @@ public:
 		/// </summary>
 		ConstIterator& operator++()
 		{
-			if (mNode)
+			if (!mNode)
 			{
-				mNode = mNode->next;
+				throw std::runtime_error("Invalid iterator");
 			}
+			mNode = mNode->next;
 			return *this;
+		}
+
+		/// <summary>
+		/// 後置インクリメント
+		/// </summary>
+		ConstIterator operator++(int)
+		{
+			if (!mNode)
+			{
+				throw std::runtime_error("Invalid iterator");
+			}
+			ConstIterator temp = *this;
+			mNode = mNode->next;
+			return temp;
 		}
 
 		/// <summary>
@@ -132,11 +217,26 @@ public:
 		/// </summary>
 		ConstIterator& operator--()
 		{
-			if (mNode)
+			if (!mNode)
 			{
-				mNode = mNode->prev;
+				throw std::runtime_error("Invalid iterator");
 			}
+			mNode = mNode->prev;
 			return *this;
+		}
+
+		/// <summary>
+		/// 後置デクリメント
+		/// </summary>
+		ConstIterator operator--(int)
+		{
+			if (!mNode)
+			{
+				throw std::runtime_error("Invalid iterator");
+			}
+			ConstIterator temp = *this;
+			mNode = mNode->prev;
+			return temp;
 		}
 
 		/// <summary>
@@ -299,7 +399,7 @@ public:
 	/// <returns>末尾の次を指すコンストイテレータ</returns>
 	ConstIterator CEnd() const
 	{
-		return ConstIterator(mTail);
+		return ConstIterator(nullptr);
 	}
 
 	/// <summary>
