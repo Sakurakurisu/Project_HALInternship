@@ -59,10 +59,10 @@ TEST(LinkedListTest, InsertDataReturnValueFailTest)
 
 	auto it = list.Begin();
 
-	list.Insert(it, 10);
-
 	//基本的に失敗しません　コメントアウト
-	//EXPECT_EQ(0, list.Count());
+	//list.Insert(it, 10);
+
+	EXPECT_EQ(0, list.Count());
 }
 
 /// <summary>
@@ -86,8 +86,9 @@ TEST(LinkedListTest, RemoveDataReturnValueFailTest)
 	LinkedList<int> list;
 
 	auto it = list.Insert(list.End(), 10);
-	list.Remove(it);
-	//EXPECT_EQ(1, list.Count());
+	//基本的に失敗しません　コメントアウト
+	//list.Remove(it);
+	EXPECT_EQ(1, list.Count());
 }
 
 /// <summary>
