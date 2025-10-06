@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "../Project1_2/linkedList.h"
+#include "../Project1/linkedList.h"
 
 #pragma region データ数の取得テスト
 
@@ -128,7 +128,7 @@ TEST(LinkedListTest, InsertToEmptyListReturnValueTest)
 
 	//先頭イテレータを引数で渡した場合
 	list.Insert(list.Begin(), 10);
-	EXPECT_TRUE(10 == * list.Begin());
+	EXPECT_TRUE(10 == *list.Begin());
 
 	//末尾イテレータを引数で渡した場合
 	list.Insert(list.End(), 20);
