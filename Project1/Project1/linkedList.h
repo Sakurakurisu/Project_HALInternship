@@ -1,5 +1,5 @@
 #pragma once
-#include <stdexcept>
+#include <cassert>
 
 /// <summary>
 /// 双方向リストのテンプレートクラス
@@ -16,132 +16,24 @@ private:
 		Node* prev;
 		Node* next;
 
+		// データを持つノード用
 		Node(const T& value) : data(value), prev(nullptr), next(nullptr)
 		{
 		}
+
+		// ダミーノード用
+		Node() : data(T()), prev(nullptr), next(nullptr)
+		{
+		}
 	};
 
-	Node* mHead;
-	Node* mTail;
+	// ダミーノード（末尾の次を指す）
+	Node* mDummy;
 	size_t mCount;
 
 public:
-	// コンストイテレータクラスの前方宣言
-	class ConstIterator;
-
-	/// <summary>
-	/// イテレータクラス
-	/// </summary>
-	class Iterator
-	{
-	private:
-		Node* mNode;
-		friend class LinkedList<T>;
-		friend class ConstIterator;
-
-		Iterator(Node* n) : mNode(n)
-		{
-		}
-
-	public:
-		Iterator() : mNode(nullptr)
-		{
-		}
-
-		/// <summary>
-		/// イテレータの指す要素を取得（非const版）
-		/// </summary>
-		T& operator*()
-		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
-			return mNode->data;
-		}
-
-		/// <summary>
-		/// アロー演算子
-		/// </summary>
-		T* operator->()
-		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
-			return &(mNode->data);
-		}
-
-		/// <summary>
-		/// 前置インクリメント
-		/// </summary>
-		Iterator& operator++()
-		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
-			mNode = mNode->next;
-			return *this;
-		}
-
-		/// <summary>
-		/// 後置インクリメント
-		/// </summary>
-		Iterator operator++(int)
-		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
-			Iterator temp = *this;
-			mNode = mNode->next;
-			return temp;
-		}
-
-		/// <summary>
-		/// 前置デクリメント
-		/// </summary>
-		Iterator& operator--()
-		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
-			mNode = mNode->prev;
-			return *this;
-		}
-
-		/// <summary>
-		/// 後置デクリメント
-		/// </summary>
-		Iterator operator--(int)
-		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
-			Iterator temp = *this;
-			mNode = mNode->prev;
-			return temp;
-		}
-
-		/// <summary>
-		/// 等価比較
-		/// </summary>
-		bool operator==(const Iterator& other) const
-		{
-			return mNode == other.mNode;
-		}
-
-		/// <summary>
-		/// 非等価比較
-		/// </summary>
-		bool operator!=(const Iterator& other) const
-		{
-			return mNode != other.mNode;
-		}
-	};
+	// イテレータクラスの前方宣言
+	class Iterator;
 
 	/// <summary>
 	/// コンストイテレータクラス
@@ -150,14 +42,15 @@ public:
 	{
 	private:
 		const Node* mNode;
+		const Node* mDummy;
 		friend class LinkedList<T>;
 
-		ConstIterator(const Node* n) : mNode(n)
+		ConstIterator(const Node* node, const Node* dummy) : mNode(node), mDummy(dummy)
 		{
 		}
 
 	public:
-		ConstIterator() : mNode(nullptr)
+		ConstIterator() : mNode(nullptr), mDummy(nullptr)
 		{
 		}
 
@@ -166,10 +59,8 @@ public:
 		/// </summary>
 		const T& operator*() const
 		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
+			assert(mNode);
+			assert(mNode != mDummy);
 			return mNode->data;
 		}
 
@@ -178,10 +69,7 @@ public:
 		/// </summary>
 		const T* operator->() const
 		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
+			assert(mNode);
 			return &(mNode->data);
 		}
 
@@ -190,10 +78,8 @@ public:
 		/// </summary>
 		ConstIterator& operator++()
 		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
+			assert(mNode);
+			assert(mNode != mDummy);
 			mNode = mNode->next;
 			return *this;
 		}
@@ -203,10 +89,8 @@ public:
 		/// </summary>
 		ConstIterator operator++(int)
 		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
+			assert(mNode);
+			assert(mNode != mDummy);
 			ConstIterator temp = *this;
 			mNode = mNode->next;
 			return temp;
@@ -217,10 +101,8 @@ public:
 		/// </summary>
 		ConstIterator& operator--()
 		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
+			assert(mNode);
+			assert(mNode != mDummy);
 			mNode = mNode->prev;
 			return *this;
 		}
@@ -230,10 +112,8 @@ public:
 		/// </summary>
 		ConstIterator operator--(int)
 		{
-			if (!mNode)
-			{
-				throw std::runtime_error("Invalid iterator");
-			}
+			assert(mNode);
+			assert(mNode != mDummy);
 			ConstIterator temp = *this;
 			mNode = mNode->prev;
 			return temp;
@@ -261,17 +141,57 @@ public:
 		ConstIterator& operator=(const ConstIterator& other)
 		{
 			mNode = other.mNode;
+			mDummy = other.mDummy;
 			return *this;
 		}
 	};
 
-	LinkedList() : mHead(nullptr), mTail(nullptr), mCount(0)
+	/// <summary>
+	/// イテレータクラス
+	/// </summary>
+	class Iterator : public ConstIterator
 	{
+	private:
+		friend class LinkedList<T>;
+
+		Iterator(Node* node, Node* dummy) : ConstIterator(node, dummy)
+		{
+		}
+
+	public:
+		Iterator() : ConstIterator(nullptr, nullptr)
+		{
+		}
+
+		/// <summary>
+		/// イテレータの指す要素を取得（非const版）
+		/// </summary>
+		T& operator*()
+		{
+			return const_cast<T&>(ConstIterator::operator*());
+		}
+
+		/// <summary>
+		/// アロー演算子
+		/// </summary>
+		T* operator->()
+		{
+			return const_cast<T*>(ConstIterator::operator->());
+		}
+	};
+
+	LinkedList() : mDummy(new Node()), mCount(0)
+	{
+		// ダミーノードを自分自身に循環させる（空リスト状態）
+		mDummy->next = mDummy;
+		mDummy->prev = mDummy;
 	}
 
 	~LinkedList()
 	{
 		Clean();
+
+		delete mDummy;
 	}
 
 
@@ -282,39 +202,22 @@ public:
 	/// <returns>削除された要素の次を指すイテレータ</returns>
 	Iterator Remove(Iterator it)
 	{
-		if (!it.mNode)
+		Node* node = const_cast<Node*>(it.mNode);
+		if (!node || node == mDummy)
 		{
-			return Iterator(nullptr);
+			return Iterator(mDummy, mDummy);
 		}
 
-		Node* nodeToDelete = it.mNode;
+		Node* nodeToDelete = node;
 		Node* nextNode = nodeToDelete->next;
 
-		// 前後のノードを繋ぎ直す
-		if (nodeToDelete->prev)
-		{
-			nodeToDelete->prev->next = nodeToDelete->next;
-		}
-		else
-		{
-			// 先頭ノードの場合
-			mHead = nodeToDelete->next;
-		}
-
-		if (nodeToDelete->next)
-		{
-			nodeToDelete->next->prev = nodeToDelete->prev;
-		}
-		else
-		{
-			// 末尾ノードの場合
-			mTail = nodeToDelete->prev;
-		}
+		nodeToDelete->prev->next = nodeToDelete->next;
+		nodeToDelete->next->prev = nodeToDelete->prev;
 
 		delete nodeToDelete;
 		mCount--;
 
-		return Iterator(nextNode);
+		return Iterator(nextNode, mDummy);
 	}
 
 	/// <summary>
@@ -325,45 +228,18 @@ public:
 	/// <returns>挿入された要素を指すイテレータ</returns>
 	Iterator Insert(Iterator it, const T& value)
 	{
-		// 末尾への挿入、またはリストが空の場合
-		if (!it.mNode)
-		{
-			Node* newNode = new Node(value);
-			if (mHead == nullptr)
-			{
-				mHead = newNode;
-				mTail = newNode;
-			}
-			else
-			{
-				mTail->next = newNode;
-				newNode->prev = mTail;
-				mTail = newNode;
-			}
-			mCount++;
-			return Iterator(mTail);
-		}
+		Node* current = const_cast<Node*>(it.mNode);
+		assert(current);
 
 		Node* newNode = new Node(value);
-		Node* current = it.mNode;
 
 		newNode->next = current;
 		newNode->prev = current->prev;
-
-		if (current->prev)
-		{
-			current->prev->next = newNode;
-		}
-		else
-		{
-			// 先頭への挿入
-			mHead = newNode;
-		}
-
+		current->prev->next = newNode;
 		current->prev = newNode;
-		mCount++;
 
-		return Iterator(newNode);
+		mCount++;
+		return Iterator(newNode, mDummy);
 	}
 
 	/// <summary>
@@ -372,7 +248,7 @@ public:
 	/// <returns>先頭を指すイテレータ</returns>
 	Iterator Begin()
 	{
-		return Iterator(mHead);
+		return Iterator(mDummy->next, mDummy);
 	}
 
 	/// <summary>
@@ -381,7 +257,7 @@ public:
 	/// <returns>末尾の次を指すイテレータ</returns>
 	Iterator End()
 	{
-		return Iterator(nullptr);
+		return Iterator(mDummy, mDummy);
 	}
 
 	/// <summary>
@@ -390,7 +266,7 @@ public:
 	/// <returns>先頭を指すコンストイテレータ</returns>
 	ConstIterator CBegin() const
 	{
-		return ConstIterator(mHead);
+		return ConstIterator(mDummy->next, mDummy);
 	}
 
 	/// <summary>
@@ -399,7 +275,7 @@ public:
 	/// <returns>末尾の次を指すコンストイテレータ</returns>
 	ConstIterator CEnd() const
 	{
-		return ConstIterator(nullptr);
+		return ConstIterator(mDummy, mDummy);
 	}
 
 	/// <summary>
@@ -425,14 +301,18 @@ public:
 	/// </summary>
 	void Clean()
 	{
-		while (mHead)
+		// ダミーノードの次から順に削除（ダミーノード自体は削除しない）
+		Node* current = mDummy->next;
+		while (current != mDummy)
 		{
-			Node* temp = mHead;
-			mHead = mHead->next;
+			Node* temp = current;
+			current = current->next;
 			delete temp;
 		}
-		mHead = nullptr;
-		mTail = nullptr;
+
+		// ダミーノードを空リスト状態に戻す
+		mDummy->next = mDummy;
+		mDummy->prev = mDummy;
 		mCount = 0;
 	}
 };

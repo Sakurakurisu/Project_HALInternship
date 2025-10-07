@@ -1,6 +1,38 @@
 #include "pch.h"
 #include "../Project1/linkedList.h"
 
+/// <summary>
+/// リストの内容が期待される配列と一致するかをチェック
+/// </summary>
+/// <param name="list">チェックするリスト</param>
+/// <param name="expected">期待値の配列</param>
+/// <param name="length">配列の長さ</param>
+/// <returns>一致する場合はtrue、それ以外はfalse</returns>
+bool CheckList(const LinkedList<int>& list, const int* expected, size_t length)
+{
+	// 要素数が一致するかチェック
+	if (list.Count() != length)
+	{
+		return false;
+	}
+
+	// リストと配列を同時に走査して比較
+	auto listIt = list.CBegin();
+	size_t index = 0;
+
+	while (listIt != list.CEnd() && index < length)
+	{
+		if (*listIt != expected[index])
+		{
+			return false;
+		}
+		++listIt;
+		++index;
+	}
+
+	return true;
+}
+
 #pragma region データ数の取得テスト
 
 /// <summary>
@@ -102,19 +134,6 @@ TEST(LinkedListTest, RemoveDataAtEmptyListReturnValueTest)
 	EXPECT_EQ(0, list.Count());
 }
 
-/// <summary>
-/// ID_8 const のメソッドであるか
-/// </summary>
-TEST(LinkedListTest, ConstMethodTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-	const LinkedList<int>& constList = list;
-	// constオブジェクトではInsertは呼び出せない（コンパイルエラーになるためコメントアウト）
-	//constList.Insert(list.End(), 10);
-}
-
 #pragma endregion
 
 #pragma region データの挿入テスト
@@ -124,16 +143,21 @@ TEST(LinkedListTest, ConstMethodTest)
 /// </summary>
 TEST(LinkedListTest, InsertToEmptyListReturnValueTest)
 {
-	LinkedList<int> list;
+	{
+		LinkedList<int> list;
 
-	//先頭イテレータを引数で渡した場合
-	list.Insert(list.Begin(), 10);
-	EXPECT_TRUE(10 == *list.Begin());
+		//先頭イテレータを引数で渡した場合
+		list.Insert(list.Begin(), 10);
+		EXPECT_TRUE(10 == *list.Begin());
+	}
 
-	//末尾イテレータを引数で渡した場合
-	list.Insert(list.End(), 20);
-	auto it = ++list.Begin();
-	EXPECT_TRUE(20 == *it);
+	{
+		LinkedList<int> list;
+
+		//末尾イテレータを引数で渡した場合
+		list.Insert(list.End(), 20);
+		EXPECT_TRUE(20 == *list.Begin());
+	}
 }
 
 /// <summary>
@@ -173,30 +197,50 @@ TEST(LinkedListTest, InsertAtEndWithMultipleElementsReturnValueTest)
 /// </summary>
 TEST(LinkedListTest, InsertAtMiddleReturnValueTest)
 {
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-	auto middleIt = list.Insert(list.End(), 30);
-	list.Insert(list.End(), 40);
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
 
+		// 先頭に要素を挿入
+		auto it = list.Insert(list.Begin(), 10);
+		++it;
+		//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
+		EXPECT_TRUE(20 == *it);
+		int expected[4] = {10, 20, 30, 40};
+		EXPECT_TRUE(CheckList(list, expected, 4));
+	}
 
-	// 先頭に要素を挿入
-	auto it = list.Insert(list.Begin(), 0);
-	++it;
-	//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
-	EXPECT_TRUE(10 == *it);
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		auto middleIt = list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
 
+		// 中間に要素を挿入
+		auto it = list.Insert(middleIt, 20);
+		++it;
+		//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
+		EXPECT_TRUE(30 == *it);
+		int expected[4] = {10, 20, 30, 40};
+		EXPECT_TRUE(CheckList(list, expected, 4));
+	}
 
-	// 中間に要素を挿入
-	it = list.Insert(middleIt, 20);
-	++it;
-	//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
-	EXPECT_TRUE(30 == *it);
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
 
-	// 末尾に要素を挿入
-	it = list.Insert(list.End(), 20);
-	++it;
-	//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
-	EXPECT_TRUE(it == list.End());
+		// 末尾に要素を挿入
+		auto it = list.Insert(list.End(), 40);
+		++it;
+		//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
+		EXPECT_TRUE(it == list.End());
+		int expected[4] = {10, 20, 30, 40};
+		EXPECT_TRUE(CheckList(list, expected, 4));
+	}
 }
 
 /// <summary>
@@ -204,23 +248,52 @@ TEST(LinkedListTest, InsertAtMiddleReturnValueTest)
 /// </summary>
 TEST(LinkedListTest, InsertWithConstIteratorReturnValueTest)
 {
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-	auto middleIt = list.Insert(list.End(), 30);
-	list.Insert(list.End(), 40);
-
 	// 先頭に要素を挿入
-	// 以下の行はコンパイルエラーになるためコメントアウト
-	//auto it = list.Insert(list.CBegin(), 5);
+#if defined TT_TEST_INSERT_AT_CBEGIN
 
-	// 先頭に要素を挿入
-	// 以下の行はコンパイルエラーになるためコメントアウト
-	//LinkedList<int>::ConstIterator middleConstIt = middleIt;
-	//auto it = list.Insert(middleConstIt, 5);
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		auto it = list.Insert(list.CBegin(), 5); //ここでエラー
+	}
+
+#endif // TT_TEST_INSERT_AT_CBEGIN
+
+
+	// 中央に要素を挿入
+#if defined TT_TEST_INSERT_AT_CMIDDLE
+
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		auto middleIt = list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		LinkedList<int>::ConstIterator middleConstIt = middleIt;
+		auto it = list.Insert(middleConstIt, 5);
+	}
+
+
+#endif // TT_TEST_INSERT_AT_CMIDDLE
+
 
 	// 末尾に要素を挿入
-	// 以下の行はコンパイルエラーになるためコメントアウト
-	//auto it = list.Insert(list.CEnd(), 5);
+#if defined TT_TEST_INSERT_AT_CEND
+
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		auto it = list.Insert(list.CEnd(), 5);
+	}
+
+
+#endif // TT_TEST_INSERT_AT_CEND
 }
 
 /// <summary>
@@ -240,21 +313,6 @@ TEST(LinkedListTest, InsertWithInvalidIteratorReturnValueTest)
 	//list.Insert(invalidIt, 20);
 
 	EXPECT_FALSE(20 == *list.Begin());
-}
-
-/// <summary>
-/// ID_15 非constのメソッドであるか
-/// </summary>
-TEST(LinkedListTest, InsertIsNotConstMethodTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-
-	const LinkedList<int>& constList = list;
-
-	// コンパイルエラーになるためコメントアウト
-	// constList.Insert(constList.End(), 20);
 }
 
 #pragma endregion
@@ -337,8 +395,11 @@ TEST(LinkedListTest, RemoveWithConstIteratorTest)
 	LinkedList<int> list;
 	list.Insert(list.End(), 10);
 
-	// 以下はコンパイルエラーになるためコメントアウト
-	//auto it = list.Remove(list.CBegin());
+#if defined TT_TEST_REMOVE_WHEN_CONST
+
+	auto it = list.Remove(list.CBegin());
+
+#endif //TT_TEST_REMOVE_WHEN_CONST
 }
 
 /// <summary>
@@ -357,20 +418,6 @@ TEST(LinkedListTest, RemoveWithInvalidIteratorTest)
 	// 何も起こらない
 	// リストの要素がないイテレータ、別リストの要素を指すイテレータを渡した際の挙動など
 	EXPECT_TRUE(1 == list.Count());
-}
-
-/// <summary>
-/// ID_22 非constのメソッドであるか
-/// </summary>
-TEST(LinkedListTest, RemoveIsNotConstMethodTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-
-	const LinkedList<int>& constList = list;
-	// constオブジェクトではInsertは呼び出せない（コンパイルエラーになるためコメントアウト）
-	//constList.Remove(constList.End(), 20);
 }
 
 #pragma endregion
@@ -479,20 +526,6 @@ TEST(LinkedListTest, BeginAfterRemoveTest)
 	EXPECT_EQ(20, *list.Begin());
 }
 
-/// <summary>
-/// ID_28 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
-/// </summary>
-TEST(LinkedListTest, BeginConstCheckTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-	const LinkedList<int>& constList = list;
-
-	// 以下はコンパイルエラーになるためコメントアウト
-	// auto it = constList.Begin();
-}
-
 #pragma endregion
 
 #pragma region 先頭コンストイテレータの取得
@@ -597,20 +630,6 @@ TEST(LinkedListTest, BeginConstAfterRemoveTest)
 	list.Remove(list.End());
 	//先頭要素を指すコンストイテレータが返る
 	EXPECT_EQ(20, *list.CBegin());
-}
-
-/// <summary>
-/// ID_34 constのメソッドであるか
-/// </summary>
-TEST(LinkedListTest, ConstIteratorBeginConstCheckTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-	const LinkedList<int>& constList = list;
-
-	// コンパイルエラーなし
-	auto it = constList.CBegin();
 }
 
 
@@ -724,19 +743,6 @@ TEST(LinkedListTest, EndAfterRemoveTest)
 	EXPECT_EQ(endIt, list.End());
 }
 
-/// <summary>
-/// ID_40 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
-/// </summary>
-TEST(LinkedListTest, EndCheckTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-	const LinkedList<int>& constList = list;
-
-	// 以下はコンパイルエラーになるためコメントアウト
-	// auto it = constList.End();
-}
 
 #pragma endregion
 
@@ -848,20 +854,6 @@ TEST(LinkedListTest, EndConstAfterRemoveTest)
 	EXPECT_EQ(endIt, list.CEnd());
 }
 
-/// <summary>
-/// ID_46 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
-/// </summary>
-TEST(LinkedListTest, EndConstCheckTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-	const LinkedList<int>& constList = list;
-
-	// 以下はコンパイルエラーなし
-	auto it = constList.CEnd();
-}
-
 #pragma endregion
 
 #pragma region イテレータの指す要素を取得する
@@ -874,7 +866,7 @@ TEST(LinkedListTest, DereferenceInvalidIteratorTest)
 	LinkedList<int>::Iterator it;
 
 	// Assert発生
-	EXPECT_THROW(*it, std::runtime_error);
+	EXPECT_DEATH(*it, ".*");
 }
 
 /// <summary>
@@ -893,20 +885,6 @@ TEST(LinkedListTest, IteratorModifyValueTest)
 }
 
 /// <summary>
-/// ID_2 ConstIteratorから取得した要素に対して、値の代入が行えないかをチェック
-/// </summary>
-TEST(LinkedListTest, ConstIteratorCannotModifyValueTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-	auto it = list.CBegin();
-
-	// 以下はコンパイルエラーになるためコメントアウト
-	// *it = 20;
-}
-
-/// <summary>
 /// ID_3 リストが空の際の、先頭イテレータに対して呼び出した際の挙動
 /// </summary>
 TEST(LinkedListTest, DereferenceBeginOnEmptyListTest)
@@ -916,7 +894,7 @@ TEST(LinkedListTest, DereferenceBeginOnEmptyListTest)
 	auto it = list.Begin();
 
 	// Assert発生
-	EXPECT_THROW(*it, std::runtime_error);
+	EXPECT_DEATH(*it, ".*");
 }
 
 /// <summary>
@@ -931,7 +909,7 @@ TEST(LinkedListTest, DereferenceEndIteratorTest)
 	auto it = list.End();
 
 	// Assert発生
-	EXPECT_THROW(*it, std::runtime_error);
+	EXPECT_DEATH(*it, ".*");
 }
 
 #pragma endregion
@@ -946,7 +924,7 @@ TEST(LinkedListTest, IncrementInvalidIteratorTest)
 	LinkedList<int>::Iterator it;
 
 	// Assert発生
-	EXPECT_THROW(++it, std::runtime_error);
+	EXPECT_DEATH(++it, ".*");
 }
 
 /// <summary>
@@ -958,7 +936,7 @@ TEST(LinkedListTest, IncrementBeginOnEmptyListTest)
 	auto it = list.Begin();
 
 	// Assert発生
-	EXPECT_THROW(++it, std::runtime_error);
+	EXPECT_DEATH(++it, ".*");
 }
 
 /// <summary>
@@ -971,7 +949,7 @@ TEST(LinkedListTest, IncrementEndIteratorTest)
 	auto it = list.End();
 
 	// Assert発生
-	EXPECT_THROW(++it, std::runtime_error);
+	EXPECT_DEATH(++it, ".*");
 }
 
 /// <summary>
@@ -1054,7 +1032,7 @@ TEST(LinkedListTest, DecrementInvalidIteratorTest)
 	LinkedList<int>::Iterator it;
 
 	// Assert発生
-	EXPECT_THROW(--it, std::runtime_error);
+	EXPECT_DEATH(--it, ".*");
 }
 
 /// <summary>
@@ -1066,7 +1044,7 @@ TEST(LinkedListTest, DecrementBeginOnEmptyListTest)
 	auto it = list.End();
 
 	// Assert発生
-	EXPECT_THROW(--it, std::runtime_error);
+	EXPECT_DEATH(--it, ".*");
 }
 
 /// <summary>
@@ -1079,7 +1057,7 @@ TEST(LinkedListTest, DecrementEndIteratorTest)
 	auto it = list.Begin();
 
 	// Assert発生
-	EXPECT_THROW(--it, std::runtime_error);
+	EXPECT_DEATH(--it, ".*");
 }
 
 /// <summary>
@@ -1148,20 +1126,6 @@ TEST(LinkedListTest, PostDecrementReturnValueTest)
 #pragma region イテレータのコピーを行う
 
 /// <summary>
-/// ID_17 ConstIteratorから、Iteratorのコピーが作成されないかをチェック
-/// </summary>
-TEST(LinkedListTest, CannotCopyConstIteratorToIteratorTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-	auto constIt = list.CBegin();
-
-	// 以下はコンパイルエラーになるためコメントアウト
-	// LinkedList<int>::Iterator it = constIt;
-}
-
-/// <summary>
 /// ID_18 コピーコンストラクト後の値がコピー元と等しいことをチェック
 /// </summary>
 TEST(LinkedListTest, CopyConstructorTest)
@@ -1182,21 +1146,6 @@ TEST(LinkedListTest, CopyConstructorTest)
 #pragma endregion
 
 #pragma region イテレータの代入を行う
-
-/// <summary>
-/// ID_19 IteratorにConstIteratorを代入できない事をチェック
-/// </summary>
-TEST(LinkedListTest, CannotAssignConstIteratorToIteratorTest)
-{
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-
-	auto it = list.Begin();
-	auto constIt = list.CBegin();
-
-	// 以下はコンパイルエラーになるためコメントアウト
-	// it = constIt;
-}
 
 /// <summary>
 /// ID_20 代入後の値がコピー元と等しいことをチェック
