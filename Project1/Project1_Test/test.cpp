@@ -42,6 +42,7 @@ TEST(LinkedListTest, EmptyListTest)
 {
 	LinkedList<int> list;
 
+	//想定する戻り値 0
 	EXPECT_EQ(0, list.Count());
 }
 
@@ -53,6 +54,7 @@ TEST(LinkedListTest, InsertAtEndReturnValueSuccessTest)
 	LinkedList<int> list;
 
 	list.Insert(list.End(), 10);
+	//想定する戻り値 1
 	EXPECT_EQ(1, list.Count());
 }
 
@@ -63,10 +65,12 @@ TEST(LinkedListTest, InsertAtEndReturnValueFailTest)
 {
 	LinkedList<int> list;
 
-	list.Insert(list.End(), 10);
+	LinkedList<int> otherList;
 
-	//基本的に失敗しません　コメントアウト
-	//EXPECT_EQ(0, list.Count());
+	list.Insert(otherList.End(), 10);
+
+	//想定する戻り値 0
+	EXPECT_EQ(0, list.Count());
 }
 
 /// <summary>
@@ -79,6 +83,8 @@ TEST(LinkedListTest, InsertDateReturnValueSuccessTest)
 	auto it = list.Begin();
 
 	list.Insert(it, 10);
+
+	//想定する戻り値 1
 	EXPECT_EQ(1, list.Count());
 }
 
@@ -89,11 +95,11 @@ TEST(LinkedListTest, InsertDataReturnValueFailTest)
 {
 	LinkedList<int> list;
 
-	auto it = list.Begin();
+	LinkedList<int> otherList;
 
-	//基本的に失敗しません　コメントアウト
-	//list.Insert(it, 10);
+	list.Insert(otherList.Begin(), 10);
 
+	//想定する戻り値 0
 	EXPECT_EQ(0, list.Count());
 }
 
@@ -107,6 +113,8 @@ TEST(LinkedListTest, RemoveDataReturnValueSuccessTest)
 	auto it = list.Insert(list.End(), 10);
 
 	list.Remove(it);
+
+	//想定する戻り値 0
 	EXPECT_EQ(0, list.Count());
 }
 
@@ -117,9 +125,13 @@ TEST(LinkedListTest, RemoveDataReturnValueFailTest)
 {
 	LinkedList<int> list;
 
-	auto it = list.Insert(list.End(), 10);
-	//基本的に失敗しません　コメントアウト
-	//list.Remove(it);
+	list.Insert(list.End(), 10);
+
+	LinkedList<int> otherList;
+
+	list.Remove(otherList.End());
+
+	//想定する戻り値 1
 	EXPECT_EQ(1, list.Count());
 }
 
@@ -131,6 +143,9 @@ TEST(LinkedListTest, RemoveDataAtEmptyListReturnValueTest)
 	LinkedList<int> list;
 
 	list.Remove(list.Begin());
+
+
+	//想定する戻り値 0
 	EXPECT_EQ(0, list.Count());
 }
 
@@ -148,6 +163,8 @@ TEST(LinkedListTest, InsertToEmptyListReturnValueTest)
 
 		//先頭イテレータを引数で渡した場合
 		list.Insert(list.Begin(), 10);
+
+		//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる。
 		EXPECT_TRUE(10 == *list.Begin());
 	}
 
@@ -156,6 +173,7 @@ TEST(LinkedListTest, InsertToEmptyListReturnValueTest)
 
 		//末尾イテレータを引数で渡した場合
 		list.Insert(list.End(), 20);
+		//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる。
 		EXPECT_TRUE(20 == *list.Begin());
 	}
 }
@@ -173,6 +191,7 @@ TEST(LinkedListTest, InsertAtBeginReturnValueTest)
 
 	++it;
 
+	//先頭に要素が挿入され、元々先頭だった要素が２番目になる
 	EXPECT_TRUE(20 == *it);
 }
 
@@ -197,48 +216,52 @@ TEST(LinkedListTest, InsertAtEndWithMultipleElementsReturnValueTest)
 /// </summary>
 TEST(LinkedListTest, InsertAtMiddleReturnValueTest)
 {
+	// 先頭に要素を挿入
 	{
 		LinkedList<int> list;
 		list.Insert(list.End(), 20);
 		list.Insert(list.End(), 30);
 		list.Insert(list.End(), 40);
 
-		// 先頭に要素を挿入
 		auto it = list.Insert(list.Begin(), 10);
 		++it;
 		//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
 		EXPECT_TRUE(20 == *it);
 		int expected[4] = {10, 20, 30, 40};
+		//格納済みの要素に影響がない
 		EXPECT_TRUE(CheckList(list, expected, 4));
 	}
 
+	// 中間に要素を挿入
 	{
 		LinkedList<int> list;
 		list.Insert(list.End(), 10);
 		auto middleIt = list.Insert(list.End(), 30);
 		list.Insert(list.End(), 40);
 
-		// 中間に要素を挿入
+
 		auto it = list.Insert(middleIt, 20);
 		++it;
 		//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
 		EXPECT_TRUE(30 == *it);
 		int expected[4] = {10, 20, 30, 40};
+		//格納済みの要素に影響がない
 		EXPECT_TRUE(CheckList(list, expected, 4));
 	}
 
+	// 末尾に要素を挿入
 	{
 		LinkedList<int> list;
 		list.Insert(list.End(), 10);
 		list.Insert(list.End(), 20);
 		list.Insert(list.End(), 30);
 
-		// 末尾に要素を挿入
 		auto it = list.Insert(list.End(), 40);
 		++it;
 		//イテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
 		EXPECT_TRUE(it == list.End());
 		int expected[4] = {10, 20, 30, 40};
+		//格納済みの要素に影響がない
 		EXPECT_TRUE(CheckList(list, expected, 4));
 	}
 }
@@ -249,23 +272,22 @@ TEST(LinkedListTest, InsertAtMiddleReturnValueTest)
 TEST(LinkedListTest, InsertWithConstIteratorReturnValueTest)
 {
 	// 先頭に要素を挿入
-#if defined TT_TEST_INSERT_AT_CBEGIN
-
 	{
 		LinkedList<int> list;
-		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
 		list.Insert(list.End(), 30);
 		list.Insert(list.End(), 40);
 
-		auto it = list.Insert(list.CBegin(), 5); //ここでエラー
+		auto it = list.Insert(list.CBegin(), 10);
+		++it;
+		//コンストイテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
+		EXPECT_TRUE(20 == *it);
+		int expected[4] = {10, 20, 30, 40};
+		//格納済みの要素に影響がない
+		EXPECT_TRUE(CheckList(list, expected, 4));
 	}
 
-#endif // TT_TEST_INSERT_AT_CBEGIN
-
-
 	// 中央に要素を挿入
-#if defined TT_TEST_INSERT_AT_CMIDDLE
-
 	{
 		LinkedList<int> list;
 		list.Insert(list.End(), 10);
@@ -273,27 +295,30 @@ TEST(LinkedListTest, InsertWithConstIteratorReturnValueTest)
 		list.Insert(list.End(), 40);
 
 		LinkedList<int>::ConstIterator middleConstIt = middleIt;
-		auto it = list.Insert(middleConstIt, 5);
+		auto it = list.Insert(middleConstIt, 20);
+		++it;
+		//コンストイテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
+		EXPECT_TRUE(30 == *it);
+		int expected[4] = {10, 20, 30, 40};
+		//格納済みの要素に影響がない
+		EXPECT_TRUE(CheckList(list, expected, 4));
 	}
 
-
-#endif // TT_TEST_INSERT_AT_CMIDDLE
-
-
 	// 末尾に要素を挿入
-#if defined TT_TEST_INSERT_AT_CEND
-
 	{
 		LinkedList<int> list;
 		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
 		list.Insert(list.End(), 30);
-		list.Insert(list.End(), 40);
 
-		auto it = list.Insert(list.CEnd(), 5);
+		auto it = list.Insert(list.CEnd(), 40);
+		++it;
+		//コンストイテレータの指す位置に要素が挿入されその位置にあった要素が後ろにずれる
+		EXPECT_TRUE(it == list.End());
+		int expected[4] = {10, 20, 30, 40};
+		//格納済みの要素に影響がない
+		EXPECT_TRUE(CheckList(list, expected, 4));
 	}
-
-
-#endif // TT_TEST_INSERT_AT_CEND
 }
 
 /// <summary>
@@ -309,9 +334,9 @@ TEST(LinkedListTest, InsertWithInvalidIteratorReturnValueTest)
 
 	auto invalidIt = otherList.Begin();
 
-	//無限ループに入るため　コメントアウト
-	//list.Insert(invalidIt, 20);
+	list.Insert(invalidIt, 20);
 
+	//何も起こらない
 	EXPECT_FALSE(20 == *list.Begin());
 }
 
@@ -324,35 +349,47 @@ TEST(LinkedListTest, InsertWithInvalidIteratorReturnValueTest)
 /// </summary>
 TEST(LinkedListTest, RemoveOnEmptyListTest)
 {
-	LinkedList<int> list;
+	{
+		LinkedList<int> list;
 
-	list.Remove(list.Begin());
+		list.Remove(list.Begin());
 
-	//何も起こらない
-	EXPECT_FALSE(list.Any());
+		//何も起こらない
+		EXPECT_FALSE(list.Any());
+	}
+
+	{
+		LinkedList<int> list;
+
+		list.Remove(list.End());
+
+		//何も起こらない
+		EXPECT_FALSE(list.Any());
+	}
 }
 
 /// <summary>
-/// ID_17 リストに要素が一つある場合に、先頭イテレータを渡して、削除した際の挙動
+/// ID_17 リストに複数の要素がある場合に、先頭イテレータを渡して、削除した際の挙動
 /// </summary>
-TEST(LinkedListTest, RemoveOnSingleElementListTest)
+TEST(LinkedListTest, RemoveOnMultipleElementListTest)
 {
 	LinkedList<int> list;
 	list.Insert(list.End(), 10);
 	list.Insert(list.End(), 20);
 	list.Insert(list.End(), 30);
 
-	EXPECT_EQ(3, list.Count());
-
+	// 先頭イテレータを削除
 	list.Remove(list.Begin());
 	EXPECT_TRUE(2 == list.Count());
+
+	//先頭要素の削除
 	EXPECT_TRUE(20 == *list.Begin());
 }
 
 /// <summary>
 /// ID_18 リストに複数の要素がある場合に、末尾イテレータを渡して、削除した際の挙動
 /// </summary>
-TEST(LinkedListTest, RemoveFirstOnMultipleElementsListTest)
+TEST(LinkedListTest, RemoveLastOnMultipleElementsListTest)
 {
 	LinkedList<int> list;
 	list.Insert(list.End(), 10);
@@ -362,8 +399,9 @@ TEST(LinkedListTest, RemoveFirstOnMultipleElementsListTest)
 	EXPECT_EQ(3, list.Count());
 
 	// 末尾イテレータを削除
-	auto it = list.Remove(list.End());
+	list.Remove(list.End());
 
+	//何も起こらない
 	EXPECT_FALSE(2 == list.Count());
 }
 
@@ -381,10 +419,14 @@ TEST(LinkedListTest, RemoveMiddleElementTest)
 	list.Remove(middleIt);
 
 	auto it = list.Begin();
-	EXPECT_TRUE(10 == *it);
-
 	++it;
+
+	//期待される位置に要素が格納されている
 	EXPECT_TRUE(30 == *it);
+
+	int expected[2] = {10, 30};
+	//格納済みの要素に影響がない
+	EXPECT_TRUE(CheckList(list, expected, 2));
 }
 
 /// <summary>
@@ -394,12 +436,18 @@ TEST(LinkedListTest, RemoveWithConstIteratorTest)
 {
 	LinkedList<int> list;
 	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+	list.Insert(list.End(), 30);
 
-#if defined TT_TEST_REMOVE_WHEN_CONST
+	list.Remove(list.CBegin());
 
-	auto it = list.Remove(list.CBegin());
+	auto it = list.Begin();
+	//期待される位置に要素が格納されている
+	EXPECT_TRUE(20 == *it);
 
-#endif //TT_TEST_REMOVE_WHEN_CONST
+	int expected[2] = {20, 30};
+	//格納済みの要素に影響がない
+	EXPECT_TRUE(CheckList(list, expected, 2));
 }
 
 /// <summary>
@@ -475,28 +523,47 @@ TEST(LinkedListTest, BeginOnMultipleElementsListTest)
 /// </summary>
 TEST(LinkedListTest, BeginAfterInsertTest)
 {
-	LinkedList<int> list;
-
-	list.Insert(list.End(), 10);
-	auto it = list.Insert(list.End(), 30);
-	list.Insert(list.End(), 40);
-
-
 	//先頭に挿入
-	list.Insert(list.Begin(), 0);
-	//先頭要素を指すイテレータが返る
-	EXPECT_EQ(0, *list.Begin());
+	{
+		LinkedList<int> list;
 
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		list.Insert(list.Begin(), 10);
+
+		//先頭要素を指すイテレータが返る
+		EXPECT_EQ(10, *list.Begin());
+	}
 
 	//中央に挿入
-	list.Insert(it, 20);
-	//先頭要素を指すイテレータが返る
-	EXPECT_EQ(0, *list.Begin());
+	{
+		LinkedList<int> list;
+
+		list.Insert(list.End(), 10);
+		auto it = list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		list.Insert(it, 20);
+
+		//先頭要素を指すイテレータが返る
+		EXPECT_EQ(10, *list.Begin());
+	}
 
 	//末尾に挿入
-	list.Insert(list.End(), 50);
-	//先頭要素を指すイテレータが返る
-	EXPECT_EQ(0, *list.Begin());
+	{
+		LinkedList<int> list;
+
+		list.Insert(list.End(), 10);
+		auto it = list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Insert(list.End(), 40);
+
+		//先頭要素を指すイテレータが返る
+		EXPECT_EQ(10, *list.Begin());
+	}
 }
 
 /// <summary>
@@ -504,26 +571,41 @@ TEST(LinkedListTest, BeginAfterInsertTest)
 /// </summary>
 TEST(LinkedListTest, BeginAfterRemoveTest)
 {
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-	list.Insert(list.End(), 20);
-	auto it = list.Insert(list.End(), 30);
-	list.Insert(list.End(), 40);
-
 	// 先頭に削除
-	list.Remove(list.Begin());
-	//先頭要素を指すイテレータが返る
-	EXPECT_EQ(20, *list.Begin());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(list.Begin());
+		//先頭要素を指すイテレータが返る
+		EXPECT_EQ(20, *list.Begin());
+	}
 
 	//中央に削除
-	it = list.Remove(it);
-	//先頭要素を指すイテレータが返る
-	EXPECT_EQ(20, *list.Begin());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		auto it = list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(it);
+		//先頭要素を指すイテレータが返る
+		EXPECT_EQ(10, *list.Begin());
+	}
 
 	//末尾に削除
-	list.Remove(list.End());
-	//先頭要素を指すイテレータが返る
-	EXPECT_EQ(20, *list.Begin());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(list.End());
+		//先頭要素を指すイテレータが返る
+		EXPECT_EQ(10, *list.Begin());
+	}
 }
 
 #pragma endregion
@@ -686,31 +768,50 @@ TEST(LinkedListTest, EndOnMultipleElementsListTest)
 /// </summary>
 TEST(LinkedListTest, EndAfterInsertTest)
 {
-	LinkedList<int> list;
-
-	list.Insert(list.End(), 10);
-	auto it = list.Insert(list.End(), 30);
-	list.Insert(list.End(), 40);
-
-
 	//先頭に挿入
-	list.Insert(list.Begin(), 0);
+	{
+		LinkedList<int> list;
 
-	auto endIt = list.End();
-	//末尾を指すイテレータが返る
-	EXPECT_EQ(endIt, list.End());
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		list.Insert(list.Begin(), 10);
+
+		auto endIt = list.End();
+		//末尾を指すイテレータが返る
+		EXPECT_EQ(endIt, list.End());
+	}
 
 	//中央に挿入
-	list.Insert(it, 20);
-	endIt = list.End();
-	//末尾を指すイテレータが返る
-	EXPECT_EQ(endIt, list.End());
+	{
+		LinkedList<int> list;
+
+		list.Insert(list.End(), 10);
+		auto it = list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		list.Insert(it, 20);
+
+		auto endIt = list.End();
+		//末尾を指すイテレータが返る
+		EXPECT_EQ(endIt, list.End());
+	}
 
 	//末尾に挿入
-	list.Insert(list.End(), 50);
-	endIt = list.End();
-	//末尾を指すイテレータが返る
-	EXPECT_EQ(endIt, list.End());
+	{
+		LinkedList<int> list;
+
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Insert(list.End(), 40);
+
+		auto endIt = list.End();
+		//末尾を指すイテレータが返る
+		EXPECT_EQ(endIt, list.End());
+	}
 }
 
 /// <summary>
@@ -718,29 +819,45 @@ TEST(LinkedListTest, EndAfterInsertTest)
 /// </summary>
 TEST(LinkedListTest, EndAfterRemoveTest)
 {
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-	list.Insert(list.End(), 20);
-	auto it = list.Insert(list.End(), 30);
-	list.Insert(list.End(), 40);
-
 	// 先頭に削除
-	list.Remove(list.Begin());
-	auto endIt = list.End();
-	//末尾を指すイテレータが返る
-	EXPECT_EQ(endIt, list.End());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(list.Begin());
+		auto endIt = list.End();
+		//末尾を指すイテレータが返る
+		EXPECT_EQ(endIt, list.End());
+	}
 
 	//中央に削除
-	it = list.Remove(it);
-	endIt = list.End();
-	//末尾を指すイテレータが返る
-	EXPECT_EQ(endIt, list.End());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		auto it = list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(it);
+		auto endIt = list.End();
+		//末尾を指すイテレータが返る
+		EXPECT_EQ(endIt, list.End());
+	}
 
 	//末尾に削除
-	list.Remove(list.End());
-	endIt = list.End();
-	//末尾を指すイテレータが返る
-	EXPECT_EQ(endIt, list.End());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(list.End());
+
+		auto endIt = list.End();
+		//末尾を指すイテレータが返る
+		EXPECT_EQ(endIt, list.End());
+	}
 }
 
 
@@ -797,31 +914,50 @@ TEST(LinkedListTest, EndConstOnMultipleElementsListTest)
 /// </summary>
 TEST(LinkedListTest, EndConstAfterInsertTest)
 {
-	LinkedList<int> list;
-
-	list.Insert(list.End(), 10);
-	auto it = list.Insert(list.End(), 30);
-	list.Insert(list.End(), 40);
-
-
 	//先頭に挿入
-	list.Insert(list.Begin(), 0);
+	{
+		LinkedList<int> list;
 
-	auto endIt = list.CEnd();
-	//末尾を指すコンストイテレータが返る
-	EXPECT_EQ(endIt, list.CEnd());
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		list.Insert(list.Begin(), 10);
+
+		auto endIt = list.CEnd();
+		//末尾を指すコンストイテレータが返る
+		EXPECT_EQ(endIt, list.CEnd());
+	}
 
 	//中央に挿入
-	list.Insert(it, 20);
-	endIt = list.CEnd();
-	//末尾を指すコンストイテレータが返る
-	EXPECT_EQ(endIt, list.CEnd());
+	{
+		LinkedList<int> list;
+
+		list.Insert(list.End(), 10);
+		auto it = list.Insert(list.End(), 30);
+		list.Insert(list.End(), 40);
+
+		list.Insert(it, 20);
+
+		auto endIt = list.CEnd();
+		//末尾を指すコンストイテレータが返る
+		EXPECT_EQ(endIt, list.CEnd());
+	}
 
 	//末尾に挿入
-	list.Insert(list.End(), 50);
-	endIt = list.CEnd();
-	//末尾を指すコンストイテレータが返る
-	EXPECT_EQ(endIt, list.CEnd());
+	{
+		LinkedList<int> list;
+
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Insert(list.End(), 40);
+
+		auto endIt = list.CEnd();
+		//末尾を指すコンストイテレータが返る
+		EXPECT_EQ(endIt, list.CEnd());
+	}
 }
 
 /// <summary>
@@ -829,29 +965,45 @@ TEST(LinkedListTest, EndConstAfterInsertTest)
 /// </summary>
 TEST(LinkedListTest, EndConstAfterRemoveTest)
 {
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
-	list.Insert(list.End(), 20);
-	auto it = list.Insert(list.End(), 30);
-	list.Insert(list.End(), 40);
-
 	// 先頭に削除
-	list.Remove(list.Begin());
-	auto endIt = list.CEnd();
-	//末尾を指すコンストイテレータが返る
-	EXPECT_EQ(endIt, list.CEnd());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(list.Begin());
+		auto endIt = list.CEnd();
+		//末尾を指すコンストイテレータが返る
+		EXPECT_EQ(endIt, list.CEnd());
+	}
 
 	//中央に削除
-	it = list.Remove(it);
-	endIt = list.CEnd();
-	//末尾を指すコンストイテレータが返る
-	EXPECT_EQ(endIt, list.CEnd());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		auto it = list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(it);
+		auto endIt = list.CEnd();
+		//末尾を指すコンストイテレータが返る
+		EXPECT_EQ(endIt, list.CEnd());
+	}
 
 	//末尾に削除
-	list.Remove(list.End());
-	endIt = list.CEnd();
-	//末尾を指すコンストイテレータが返る
-	EXPECT_EQ(endIt, list.CEnd());
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+		list.Insert(list.End(), 20);
+		list.Insert(list.End(), 30);
+
+		list.Remove(list.End());
+
+		auto endIt = list.CEnd();
+		//末尾を指すコンストイテレータが返る
+		EXPECT_EQ(endIt, list.CEnd());
+	}
 }
 
 #pragma endregion
@@ -1038,7 +1190,7 @@ TEST(LinkedListTest, DecrementInvalidIteratorTest)
 /// <summary>
 /// ID_12 リストが空の際の、末尾イテレータに対して呼び出した際の挙動
 /// </summary>
-TEST(LinkedListTest, DecrementBeginOnEmptyListTest)
+TEST(LinkedListTest, DecrementEndOnEmptyListTest)
 {
 	LinkedList<int> list;
 	auto it = list.End();
@@ -1050,7 +1202,7 @@ TEST(LinkedListTest, DecrementBeginOnEmptyListTest)
 /// <summary>
 /// ID_13 先頭イテレータに対して呼び出した際の挙動
 /// </summary>
-TEST(LinkedListTest, DecrementEndIteratorTest)
+TEST(LinkedListTest, DecrementBeginIteratorTest)
 {
 	LinkedList<int> list;
 
@@ -1078,7 +1230,7 @@ TEST(LinkedListTest, DecrementOnMultipleElementsListTest)
 
 	// 先頭に到達
 	--it;
-	EXPECT_EQ(10, *list.Begin());
+	EXPECT_EQ(10, *it);
 }
 
 /// <summary>
@@ -1090,13 +1242,13 @@ TEST(LinkedListTest, PreDecrementReturnValueTest)
 	list.Insert(list.End(), 10);
 	auto it = list.Insert(list.End(), 20);
 
-	// インクリメント前の値
+	// デクリメント前の値
 	EXPECT_EQ(20, *it);
 
-	// 前置インクリメント:インクリメント後の値を返す
+	// 前置デクリメント:デクリメント後の値を返す
 	auto& result = --it;
 
-	// インクリメント後の値 前の要素を指す
+	// デクリメント後の値 前の要素を指す
 	EXPECT_EQ(10, *result);
 	EXPECT_EQ(10, *it);
 }
@@ -1110,13 +1262,13 @@ TEST(LinkedListTest, PostDecrementReturnValueTest)
 	list.Insert(list.End(), 10);
 	auto it = list.Insert(list.End(), 20);
 
-	// インクリメント前の値
+	// デクリメント前の値
 	EXPECT_EQ(20, *it);
 
-	// 後置インクリメント:インクリメント前の値を返す
+	// 後置デクリメント:デクリメント前の値を返す
 	auto result = it--;
 
-	// インクリメント後の値
+	// デクリメント後の値
 	EXPECT_EQ(20, *result);
 	EXPECT_EQ(10, *it);
 }

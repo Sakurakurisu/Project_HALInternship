@@ -42,15 +42,15 @@ public:
 	{
 	private:
 		const Node* mNode;
-		const Node* mDummy;
+		const LinkedList<T>* mList;
 		friend class LinkedList<T>;
 
-		ConstIterator(const Node* node, const Node* dummy) : mNode(node), mDummy(dummy)
+		ConstIterator(const Node* node, const LinkedList<T>* list) : mNode(node), mList(list)
 		{
 		}
 
 	public:
-		ConstIterator() : mNode(nullptr), mDummy(nullptr)
+		ConstIterator() : mNode(nullptr), mList(nullptr)
 		{
 		}
 
@@ -59,8 +59,11 @@ public:
 		/// </summary>
 		const T& operator*() const
 		{
+#ifndef NDEBUG
 			assert(mNode);
-			assert(mNode != mDummy);
+
+			assert(mList && mNode != mList->mDummy);
+#endif
 			return mNode->data;
 		}
 
@@ -69,7 +72,9 @@ public:
 		/// </summary>
 		const T* operator->() const
 		{
+#ifndef NDEBUG
 			assert(mNode);
+#endif
 			return &(mNode->data);
 		}
 
@@ -78,8 +83,11 @@ public:
 		/// </summary>
 		ConstIterator& operator++()
 		{
+#ifndef NDEBUG
 			assert(mNode);
-			assert(mNode != mDummy);
+
+			assert(mList && mNode != mList->mDummy);
+#endif
 			mNode = mNode->next;
 			return *this;
 		}
@@ -89,8 +97,11 @@ public:
 		/// </summary>
 		ConstIterator operator++(int)
 		{
+#ifndef NDEBUG
 			assert(mNode);
-			assert(mNode != mDummy);
+
+			assert(mList && mNode != mList->mDummy);
+#endif
 			ConstIterator temp = *this;
 			mNode = mNode->next;
 			return temp;
@@ -101,8 +112,11 @@ public:
 		/// </summary>
 		ConstIterator& operator--()
 		{
+#ifndef NDEBUG
 			assert(mNode);
-			assert(mNode != mDummy);
+
+			assert(mList && mNode != mList->mDummy);
+#endif
 			mNode = mNode->prev;
 			return *this;
 		}
@@ -112,8 +126,11 @@ public:
 		/// </summary>
 		ConstIterator operator--(int)
 		{
+#ifndef NDEBUG
 			assert(mNode);
-			assert(mNode != mDummy);
+
+			assert(mList && mNode != mList->mDummy);
+#endif
 			ConstIterator temp = *this;
 			mNode = mNode->prev;
 			return temp;
@@ -141,7 +158,7 @@ public:
 		ConstIterator& operator=(const ConstIterator& other)
 		{
 			mNode = other.mNode;
-			mDummy = other.mDummy;
+			mList = other.mList;
 			return *this;
 		}
 	};
@@ -154,7 +171,7 @@ public:
 	private:
 		friend class LinkedList<T>;
 
-		Iterator(Node* node, Node* dummy) : ConstIterator(node, dummy)
+		Iterator(Node* node, const LinkedList<T>* list) : ConstIterator(node, list)
 		{
 		}
 
@@ -198,14 +215,20 @@ public:
 	/// <summary>
 	/// イテレータが指す位置の要素を削除
 	/// </summary>
-	/// <param name="it">削除する要素を指すイテレータ</param>
+	/// <param name="it">削除する要素を指すコンストイテレータ</param>
 	/// <returns>削除された要素の次を指すイテレータ</returns>
-	Iterator Remove(Iterator it)
+	Iterator Remove(const ConstIterator& it)
 	{
 		Node* node = const_cast<Node*>(it.mNode);
 		if (!node || node == mDummy)
 		{
-			return Iterator(mDummy, mDummy);
+			return Iterator(mDummy, this);
+		}
+
+		// リストが一致しない場合は削除しない
+		if (it.mList != this)
+		{
+			return Iterator(mDummy, this);
 		}
 
 		Node* nodeToDelete = node;
@@ -217,19 +240,26 @@ public:
 		delete nodeToDelete;
 		mCount--;
 
-		return Iterator(nextNode, mDummy);
+		return Iterator(nextNode, this);
 	}
 
 	/// <summary>
 	/// イテレータが指す位置の前に要素を挿入
 	/// </summary>
-	/// <param name="it">挿入位置を指すイテレータ</param>
+	/// <param name="it">挿入位置を指すコンストイテレータ</param>
 	/// <param name="value">挿入する値</param>
 	/// <returns>挿入された要素を指すイテレータ</returns>
-	Iterator Insert(Iterator it, const T& value)
+	Iterator Insert(const ConstIterator& it, const T& value)
 	{
 		Node* current = const_cast<Node*>(it.mNode);
+#ifndef NDEBUG
 		assert(current);
+#endif
+
+		if (it.mList != this)
+		{
+			return Iterator(mDummy, this);
+		}
 
 		Node* newNode = new Node(value);
 
@@ -239,7 +269,7 @@ public:
 		current->prev = newNode;
 
 		mCount++;
-		return Iterator(newNode, mDummy);
+		return Iterator(newNode, this);
 	}
 
 	/// <summary>
@@ -248,7 +278,7 @@ public:
 	/// <returns>先頭を指すイテレータ</returns>
 	Iterator Begin()
 	{
-		return Iterator(mDummy->next, mDummy);
+		return Iterator(mDummy->next, this);
 	}
 
 	/// <summary>
@@ -257,7 +287,7 @@ public:
 	/// <returns>末尾の次を指すイテレータ</returns>
 	Iterator End()
 	{
-		return Iterator(mDummy, mDummy);
+		return Iterator(mDummy, this);
 	}
 
 	/// <summary>
@@ -266,7 +296,7 @@ public:
 	/// <returns>先頭を指すコンストイテレータ</returns>
 	ConstIterator CBegin() const
 	{
-		return ConstIterator(mDummy->next, mDummy);
+		return ConstIterator(mDummy->next, this);
 	}
 
 	/// <summary>
@@ -275,7 +305,7 @@ public:
 	/// <returns>末尾の次を指すコンストイテレータ</returns>
 	ConstIterator CEnd() const
 	{
-		return ConstIterator(mDummy, mDummy);
+		return ConstIterator(mDummy, this);
 	}
 
 	/// <summary>
