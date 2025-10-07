@@ -197,51 +197,10 @@ public:
 		}
 	};
 
-	LinkedList() : mDummy(new Node()), mCount(0)
-	{
-		// ダミーノードを自分自身に循環させる（空リスト状態）
-		mDummy->next = mDummy;
-		mDummy->prev = mDummy;
-	}
+	LinkedList();
 
-	~LinkedList()
-	{
-		Clean();
+	~LinkedList();
 
-		delete mDummy;
-	}
-
-
-	/// <summary>
-	/// イテレータが指す位置の要素を削除
-	/// </summary>
-	/// <param name="it">削除する要素を指すコンストイテレータ</param>
-	/// <returns>削除された要素の次を指すイテレータ</returns>
-	Iterator Remove(const ConstIterator& it)
-	{
-		Node* node = const_cast<Node*>(it.mNode);
-		if (!node || node == mDummy)
-		{
-			return Iterator(mDummy, this);
-		}
-
-		// リストが一致しない場合は削除しない
-		if (it.mList != this)
-		{
-			return Iterator(mDummy, this);
-		}
-
-		Node* nodeToDelete = node;
-		Node* nextNode = nodeToDelete->next;
-
-		nodeToDelete->prev->next = nodeToDelete->next;
-		nodeToDelete->next->prev = nodeToDelete->prev;
-
-		delete nodeToDelete;
-		mCount--;
-
-		return Iterator(nextNode, this);
-	}
 
 	/// <summary>
 	/// イテレータが指す位置の前に要素を挿入
@@ -249,100 +208,56 @@ public:
 	/// <param name="it">挿入位置を指すコンストイテレータ</param>
 	/// <param name="value">挿入する値</param>
 	/// <returns>挿入された要素を指すイテレータ</returns>
-	Iterator Insert(const ConstIterator& it, const T& value)
-	{
-		Node* current = const_cast<Node*>(it.mNode);
-#ifndef NDEBUG
-		assert(current);
-#endif
+	Iterator Insert(const ConstIterator& it, const T& value);
 
-		if (it.mList != this)
-		{
-			return Iterator(mDummy, this);
-		}
-
-		Node* newNode = new Node(value);
-
-		newNode->next = current;
-		newNode->prev = current->prev;
-		current->prev->next = newNode;
-		current->prev = newNode;
-
-		mCount++;
-		return Iterator(newNode, this);
-	}
+	/// <summary>
+	/// イテレータが指す位置の要素を削除
+	/// </summary>
+	/// <param name="it">削除する要素を指すコンストイテレータ</param>
+	/// <returns>削除された要素の次を指すイテレータ</returns>
+	Iterator Remove(const ConstIterator& it);
 
 	/// <summary>
 	/// 先頭イテレータ取得
 	/// </summary>
 	/// <returns>先頭を指すイテレータ</returns>
-	Iterator Begin()
-	{
-		return Iterator(mDummy->next, this);
-	}
+	Iterator Begin();
 
 	/// <summary>
 	/// 末尾の次を指すイテレータ取得
 	/// </summary>
 	/// <returns>末尾の次を指すイテレータ</returns>
-	Iterator End()
-	{
-		return Iterator(mDummy, this);
-	}
+	Iterator End();
 
 	/// <summary>
 	/// 先頭コンストイテレータ取得（明示的）
 	/// </summary>
 	/// <returns>先頭を指すコンストイテレータ</returns>
-	ConstIterator CBegin() const
-	{
-		return ConstIterator(mDummy->next, this);
-	}
+	ConstIterator CBegin() const;
 
 	/// <summary>
 	/// 末尾の次を指すコンストイテレータ取得（明示的）
 	/// </summary>
 	/// <returns>末尾の次を指すコンストイテレータ</returns>
-	ConstIterator CEnd() const
-	{
-		return ConstIterator(mDummy, this);
-	}
+	ConstIterator CEnd() const;
 
 	/// <summary>
 	/// リスト内の要素数を取得
 	/// </summary>
 	/// <returns>要素数</returns>
-	size_t Count() const
-	{
-		return mCount;
-	}
+	size_t Count() const;
 
 	/// <summary>
 	/// リストに要素が存在するかチェック
 	/// </summary>
 	/// <returns>要素が存在する場合はtrue、空の場合はfalse</returns>
-	bool Any() const
-	{
-		return mCount != 0;
-	}
+	bool Any() const;
 
 	/// <summary>
 	/// リストのすべての要素を削除してメモリを解放
 	/// </summary>
-	void Clean()
-	{
-		// ダミーノードの次から順に削除（ダミーノード自体は削除しない）
-		Node* current = mDummy->next;
-		while (current != mDummy)
-		{
-			Node* temp = current;
-			current = current->next;
-			delete temp;
-		}
-
-		// ダミーノードを空リスト状態に戻す
-		mDummy->next = mDummy;
-		mDummy->prev = mDummy;
-		mCount = 0;
-	}
+	void Clean();
 };
+
+// テンプレート関数の実装をインクルード
+#include "linkedList.inl"
