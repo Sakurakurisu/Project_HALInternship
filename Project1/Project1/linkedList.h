@@ -32,9 +32,6 @@ private:
 	size_t mCount;
 
 public:
-	// イテレータクラスの前方宣言
-	class Iterator;
-
 	/// <summary>
 	/// コンストイテレータクラス
 	/// </summary>
@@ -59,11 +56,8 @@ public:
 		/// </summary>
 		const T& operator*() const
 		{
-#ifndef NDEBUG
 			assert(mNode);
-
 			assert(mList && mNode != mList->mDummy);
-#endif
 			return mNode->data;
 		}
 
@@ -72,9 +66,7 @@ public:
 		/// </summary>
 		const T* operator->() const
 		{
-#ifndef NDEBUG
 			assert(mNode);
-#endif
 			return &(mNode->data);
 		}
 
@@ -83,11 +75,8 @@ public:
 		/// </summary>
 		ConstIterator& operator++()
 		{
-#ifndef NDEBUG
 			assert(mNode);
-
 			assert(mList && mNode != mList->mDummy);
-#endif
 			mNode = mNode->next;
 			return *this;
 		}
@@ -97,11 +86,8 @@ public:
 		/// </summary>
 		ConstIterator operator++(int)
 		{
-#ifndef NDEBUG
 			assert(mNode);
-
 			assert(mList && mNode != mList->mDummy);
-#endif
 			ConstIterator temp = *this;
 			mNode = mNode->next;
 			return temp;
@@ -112,11 +98,9 @@ public:
 		/// </summary>
 		ConstIterator& operator--()
 		{
-#ifndef NDEBUG
 			assert(mNode);
-
-			assert(mList && mNode != mList->mDummy);
-#endif
+			// デクリメント後がダミーノードを指さないことを確認（--Begin()を防ぐ）
+			assert(mList && mNode->prev != mList->mDummy);
 			mNode = mNode->prev;
 			return *this;
 		}
@@ -126,11 +110,9 @@ public:
 		/// </summary>
 		ConstIterator operator--(int)
 		{
-#ifndef NDEBUG
 			assert(mNode);
-
-			assert(mList && mNode != mList->mDummy);
-#endif
+			// デクリメント後がダミーノードを指さないことを確認（--Begin()を防ぐ）
+			assert(mList && mNode->prev != mList->mDummy);
 			ConstIterator temp = *this;
 			mNode = mNode->prev;
 			return temp;
@@ -216,23 +198,22 @@ public:
 	/// イテレータが指す位置の要素を削除
 	/// </summary>
 	/// <param name="it">削除する要素を指すコンストイテレータ</param>
-	/// <returns>削除された要素の次を指すイテレータ</returns>
-	Iterator Remove(const ConstIterator& it)
+	/// <returns>削除に成功した場合はtrue、失敗した場合はfalse</returns>
+	bool Remove(const ConstIterator& it)
 	{
 		Node* node = const_cast<Node*>(it.mNode);
 		if (!node || node == mDummy)
 		{
-			return Iterator(mDummy, this);
+			return false;
 		}
 
 		// リストが一致しない場合は削除しない
 		if (it.mList != this)
 		{
-			return Iterator(mDummy, this);
+			return false;
 		}
 
 		Node* nodeToDelete = node;
-		Node* nextNode = nodeToDelete->next;
 
 		nodeToDelete->prev->next = nodeToDelete->next;
 		nodeToDelete->next->prev = nodeToDelete->prev;
@@ -240,7 +221,7 @@ public:
 		delete nodeToDelete;
 		mCount--;
 
-		return Iterator(nextNode, this);
+		return true;
 	}
 
 	/// <summary>
@@ -248,17 +229,15 @@ public:
 	/// </summary>
 	/// <param name="it">挿入位置を指すコンストイテレータ</param>
 	/// <param name="value">挿入する値</param>
-	/// <returns>挿入された要素を指すイテレータ</returns>
-	Iterator Insert(const ConstIterator& it, const T& value)
+	/// <returns>挿入に成功した場合はtrue、失敗した場合はfalse</returns>
+	bool Insert(const ConstIterator& it, const T& value)
 	{
 		Node* current = const_cast<Node*>(it.mNode);
-#ifndef NDEBUG
 		assert(current);
-#endif
 
 		if (it.mList != this)
 		{
-			return Iterator(mDummy, this);
+			return false;
 		}
 
 		Node* newNode = new Node(value);
@@ -269,7 +248,7 @@ public:
 		current->prev = newNode;
 
 		mCount++;
-		return Iterator(newNode, this);
+		return true;
 	}
 
 	/// <summary>
