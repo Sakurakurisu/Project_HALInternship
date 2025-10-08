@@ -20,16 +20,14 @@ LinkedList<T>::~LinkedList()
 
 // イテレータが指す位置の前に要素を挿入
 template <typename T>
-typename LinkedList<T>::Iterator LinkedList<T>::Insert(const ConstIterator& it, const T& value)
+bool LinkedList<T>::Insert(const ConstIterator& it, const T& value)
 {
 	Node* current = const_cast<Node*>(it.mNode);
-#ifndef NDEBUG
 	assert(current);
-#endif
 
 	if (it.mList != this)
 	{
-		return Iterator(mDummy, this);
+		return false;
 	}
 
 	Node* newNode = new Node(value);
@@ -40,28 +38,27 @@ typename LinkedList<T>::Iterator LinkedList<T>::Insert(const ConstIterator& it, 
 	current->prev = newNode;
 
 	mCount++;
-	return Iterator(newNode, this);
+	return true;
 }
 
 
 // イテレータが指す位置の要素を削除
 template <typename T>
-typename LinkedList<T>::Iterator LinkedList<T>::Remove(const ConstIterator& it)
+bool LinkedList<T>::Remove(const ConstIterator& it)
 {
 	Node* node = const_cast<Node*>(it.mNode);
 	if (!node || node == mDummy)
 	{
-		return Iterator(mDummy, this);
+		return false;
 	}
 
 	// リストが一致しない場合は削除しない
 	if (it.mList != this)
 	{
-		return Iterator(mDummy, this);
+		return false;
 	}
 
 	Node* nodeToDelete = node;
-	Node* nextNode = nodeToDelete->next;
 
 	nodeToDelete->prev->next = nodeToDelete->next;
 	nodeToDelete->next->prev = nodeToDelete->prev;
@@ -69,7 +66,7 @@ typename LinkedList<T>::Iterator LinkedList<T>::Remove(const ConstIterator& it)
 	delete nodeToDelete;
 	mCount--;
 
-	return Iterator(nextNode, this);
+	return true;
 }
 
 
