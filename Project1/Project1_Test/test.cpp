@@ -360,16 +360,29 @@ TEST(LinkedListTest, InsertWithConstIteratorReturnValueTest)
 /// </summary>
 TEST(LinkedListTest, InsertWithInvalidIteratorReturnValueTest)
 {
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
+	// リストの参照がないイテレータ
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
 
-	LinkedList<int> otherList;
-	otherList.Insert(otherList.End(), 99);
 
-	auto invalidIt = otherList.Begin();
+		LinkedList<int>::Iterator it;
+		//想定する戻り値 FALSE
+		EXPECT_FALSE(list.Insert(it, 20));
+	}
 
-	//想定する戻り値 FALSE
-	EXPECT_FALSE(list.Insert(invalidIt, 20));
+	// 別リストのイテレータ
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+
+		LinkedList<int> otherList;
+		otherList.Insert(otherList.End(), 99);
+		auto otherIt = otherList.Begin();
+
+		//想定する戻り値 FALSE
+		EXPECT_FALSE(list.Insert(otherIt, 30));
+	}
 }
 
 #pragma endregion
@@ -480,14 +493,28 @@ TEST(LinkedListTest, RemoveWithConstIteratorTest)
 /// </summary>
 TEST(LinkedListTest, RemoveWithInvalidIteratorTest)
 {
-	LinkedList<int> list;
-	list.Insert(list.End(), 10);
+	// リストの参照がないイテレータ
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
 
-	// デフォルト構築された無効なイテレータ
-	LinkedList<int>::Iterator invalidIt;
+		LinkedList<int>::Iterator it;
+		//想定する戻り値 FALSE
+		EXPECT_FALSE(list.Remove(it));
+	}
 
-	//想定する戻り値 FALSE
-	EXPECT_FALSE(list.Remove(invalidIt));
+	// 別リストのイテレータ
+	{
+		LinkedList<int> list;
+		list.Insert(list.End(), 10);
+
+		LinkedList<int> otherList;
+		otherList.Insert(otherList.End(), 99);
+		auto otherIt = otherList.Begin();
+
+		//想定する戻り値 FALSE
+		EXPECT_FALSE(list.Remove(otherIt));
+	}
 }
 
 #pragma endregion
@@ -1183,6 +1210,9 @@ TEST(LinkedListTest, IncrementEndIteratorTest)
 #ifndef NDEBUG
 	LinkedList<int> list;
 
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
+
 	auto it = list.End();
 
 	// Assert発生
@@ -1296,6 +1326,8 @@ TEST(LinkedListTest, DecrementBeginIteratorTest)
 {
 #ifndef NDEBUG
 	LinkedList<int> list;
+	list.Insert(list.End(), 10);
+	list.Insert(list.End(), 20);
 
 	auto it = list.Begin();
 

@@ -232,13 +232,14 @@ public:
 	/// <returns>挿入に成功した場合はtrue、失敗した場合はfalse</returns>
 	bool Insert(const ConstIterator& it, const T& value)
 	{
-		Node* current = const_cast<Node*>(it.mNode);
-		assert(current);
-
+		// リストが一致しない場合は挿入しない
 		if (it.mList != this)
 		{
 			return false;
 		}
+
+		Node* current = const_cast<Node*>(it.mNode);
+		assert(current);
 
 		Node* newNode = new Node(value);
 

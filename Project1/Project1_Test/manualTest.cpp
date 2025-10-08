@@ -16,7 +16,7 @@ TEST(LinkedListManualTest, ConstMethodTest)
 
 	const LinkedList<int>& constList = list;
 
-	constList.Insert(list.End(), 10); //ここでエラー
+	int count = constList.Count();
 #endif //TT_TEST_IS_CONST_LIST
 
 	SUCCEED();
