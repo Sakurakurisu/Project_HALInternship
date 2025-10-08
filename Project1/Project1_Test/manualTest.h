@@ -6,6 +6,8 @@
 
 #pragma region List
 
+#define TT_TEST_IS_CONST_LIST //ID_8 const のメソッドであるか
+
 #define TT_TEST_GET_CBEGIN_CONST_LIST // ID_34 constのメソッドであるか
 
 #define TT_TEST_GET_CEND_CONST_LIST // ID_46 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
@@ -19,8 +21,6 @@
 // ※コンパイルが通らなければ成功
 
 #pragma region List
-
-//#define TT_TEST_IS_CONST_LIST //ID_8 const のメソッドであるか
 
 //#define TT_TEST_INSERT_WHEN_CONST_LIST // ID_15 非constのメソッドであるか
 
