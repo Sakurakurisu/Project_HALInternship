@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "../Project1/linkedList.h"
 
-/// <summary>
-/// リストの内容が期待される配列と一致するかをチェック
-/// </summary>
-/// <param name="list">チェックするリスト</param>
-/// <param name="expected">期待値の配列</param>
-/// <param name="length">配列の長さ</param>
-/// <returns>一致する場合はtrue、それ以外はfalse</returns>
+/**
+ * @brief リストの内容が期待される配列と一致するかをチェック
+ * @param list チェックするリスト
+ * @param expected 期待値の配列
+ * @param length 配列の長さ
+ * @return 一致する場合はtrue、それ以外はfalse
+ */
 bool CheckList(const LinkedList<int>& list, const int* expected, size_t length)
 {
 	// 要素数が一致するかチェック
@@ -35,9 +35,9 @@ bool CheckList(const LinkedList<int>& list, const int* expected, size_t length)
 
 #pragma region データ数の取得テスト
 
-/// <summary>
-/// ID_0 リストが空である場合の戻り値
-/// </summary>
+/**
+ * @brief ID_0 リストが空である場合の戻り値
+ */
 TEST(LinkedListTest, EmptyListTest)
 {
 	LinkedList<int> list;
@@ -46,9 +46,9 @@ TEST(LinkedListTest, EmptyListTest)
 	EXPECT_EQ(0, list.Count());
 }
 
-/// <summary>
-/// ID_1 リスト末尾への挿入を行った際の戻り値
-/// </summary>
+/**
+ * @brief ID_1 リスト末尾への挿入を行った際の戻り値
+ */
 TEST(LinkedListTest, InsertAtEndReturnValueSuccessTest)
 {
 	LinkedList<int> list;
@@ -58,9 +58,9 @@ TEST(LinkedListTest, InsertAtEndReturnValueSuccessTest)
 	EXPECT_EQ(1, list.Count());
 }
 
-/// <summary>
-/// ID_2 リスト末尾への挿入が失敗した際の戻り値
-/// </summary>
+/**
+ * @brief ID_2 リスト末尾への挿入が失敗した際の戻り値
+ */
 TEST(LinkedListTest, InsertAtEndReturnValueFailTest)
 {
 	LinkedList<int> list;
@@ -73,9 +73,9 @@ TEST(LinkedListTest, InsertAtEndReturnValueFailTest)
 	EXPECT_EQ(0, list.Count());
 }
 
-/// <summary>
-/// ID_3 データの挿入を行った際の戻り値
-/// </summary>
+/**
+ * @brief ID_3 データの挿入を行った際の戻り値
+ */
 TEST(LinkedListTest, InsertDateReturnValueSuccessTest)
 {
 	LinkedList<int> list;
@@ -88,9 +88,9 @@ TEST(LinkedListTest, InsertDateReturnValueSuccessTest)
 	EXPECT_EQ(1, list.Count());
 }
 
-/// <summary>
-/// ID_4 データの挿入に失敗した際の戻り値
-/// </summary>
+/**
+ * @brief ID_4 データの挿入に失敗した際の戻り値
+ */
 TEST(LinkedListTest, InsertDataReturnValueFailTest)
 {
 	LinkedList<int> list;
@@ -103,9 +103,9 @@ TEST(LinkedListTest, InsertDataReturnValueFailTest)
 	EXPECT_EQ(0, list.Count());
 }
 
-/// <summary>
-///  ID_5 データの削除を行った際の戻り値
-/// </summary>
+/**
+ * @brief  ID_5 データの削除を行った際の戻り値
+ */
 TEST(LinkedListTest, RemoveDataReturnValueSuccessTest)
 {
 	LinkedList<int> list;
@@ -118,9 +118,9 @@ TEST(LinkedListTest, RemoveDataReturnValueSuccessTest)
 	EXPECT_EQ(0, list.Count());
 }
 
-/// <summary>
-/// ID_6 データの削除が失敗した際の戻り値
-/// </summary>
+/**
+ * @brief ID_6 データの削除が失敗した際の戻り値
+ */
 TEST(LinkedListTest, RemoveDataReturnValueFailTest)
 {
 	LinkedList<int> list;
@@ -135,9 +135,9 @@ TEST(LinkedListTest, RemoveDataReturnValueFailTest)
 	EXPECT_EQ(1, list.Count());
 }
 
-/// <summary>
-/// ID_7 リストが空である場合に、データの削除を行った際の戻り値
-/// </summary>
+/**
+ * @brief ID_7 リストが空である場合に、データの削除を行った際の戻り値
+ */
 TEST(LinkedListTest, RemoveDataAtEmptyListReturnValueTest)
 {
 	LinkedList<int> list;
@@ -153,9 +153,9 @@ TEST(LinkedListTest, RemoveDataAtEmptyListReturnValueTest)
 
 #pragma region データの挿入テスト
 
-/// <summary>
-/// ID_9 リストが空である場合に、挿入した際の挙動
-/// </summary>
+/**
+ * @brief ID_9 リストが空である場合に、挿入した際の挙動
+ */
 TEST(LinkedListTest, InsertToEmptyListReturnValueTest)
 {
 	{
@@ -182,9 +182,9 @@ TEST(LinkedListTest, InsertToEmptyListReturnValueTest)
 	}
 }
 
-/// <summary>
-/// ID_10 リストに複数の要素がある場合に、先頭イテレータを渡して、挿入した際の挙動
-/// </summary>
+/**
+ * @brief ID_10 リストに複数の要素がある場合に、先頭イテレータを渡して、挿入した際の挙動
+ */
 TEST(LinkedListTest, InsertAtBeginReturnValueTest)
 {
 	LinkedList<int> list;
@@ -202,9 +202,9 @@ TEST(LinkedListTest, InsertAtBeginReturnValueTest)
 	EXPECT_TRUE(20 == *it);
 }
 
-/// <summary>
-/// ID_11 リストに複数の要素がある場合に、末尾イテレータを渡して、挿入した際の挙動
-/// </summary>
+/**
+ * @brief ID_11 リストに複数の要素がある場合に、末尾イテレータを渡して、挿入した際の挙動
+ */
 TEST(LinkedListTest, InsertAtEndWithMultipleElementsReturnValueTest)
 {
 	LinkedList<int> list;
@@ -222,9 +222,9 @@ TEST(LinkedListTest, InsertAtEndWithMultipleElementsReturnValueTest)
 	EXPECT_TRUE(30 == *it);
 }
 
-/// <summary>
-/// ID_12 リストに複数の要素がある場合に、先頭でも末尾でもないイテレータを渡して、挿入した際の挙動
-/// </summary>
+/**
+ * @brief ID_12 リストに複数の要素がある場合に、先頭でも末尾でもないイテレータを渡して、挿入した際の挙動
+ */
 TEST(LinkedListTest, InsertAtMiddleReturnValueTest)
 {
 	// 先頭に要素を挿入
@@ -290,9 +290,9 @@ TEST(LinkedListTest, InsertAtMiddleReturnValueTest)
 	}
 }
 
-/// <summary>
-/// ID_13 ConstIteratorを指定して、挿入した際の挙動
-/// </summary>
+/**
+ * @brief ID_13 ConstIteratorを指定して、挿入した際の挙動
+ */
 TEST(LinkedListTest, InsertWithConstIteratorReturnValueTest)
 {
 	// 先頭に要素を挿入
@@ -355,9 +355,9 @@ TEST(LinkedListTest, InsertWithConstIteratorReturnValueTest)
 	}
 }
 
-/// <summary>
-/// ID_14 不正なイテレータを渡して、挿入した際の挙動
-/// </summary>
+/**
+ * @brief ID_14 不正なイテレータを渡して、挿入した際の挙動
+ */
 TEST(LinkedListTest, InsertWithInvalidIteratorReturnValueTest)
 {
 	// リストの参照がないイテレータ
@@ -389,9 +389,9 @@ TEST(LinkedListTest, InsertWithInvalidIteratorReturnValueTest)
 
 #pragma region データの削除
 
-/// <summary>
-/// ID_16 リストが空である場合に、削除を行った際の挙動
-/// </summary>
+/**
+ * @brief ID_16 リストが空である場合に、削除を行った際の挙動
+ */
 TEST(LinkedListTest, RemoveOnEmptyListTest)
 {
 	{
@@ -410,9 +410,9 @@ TEST(LinkedListTest, RemoveOnEmptyListTest)
 	}
 }
 
-/// <summary>
-/// ID_17 リストに複数の要素がある場合に、先頭イテレータを渡して、削除した際の挙動
-/// </summary>
+/**
+ * @brief ID_17 リストに複数の要素がある場合に、先頭イテレータを渡して、削除した際の挙動
+ */
 TEST(LinkedListTest, RemoveOnMultipleElementListTest)
 {
 	LinkedList<int> list;
@@ -424,9 +424,9 @@ TEST(LinkedListTest, RemoveOnMultipleElementListTest)
 	EXPECT_TRUE(list.Remove(list.Begin()));
 }
 
-/// <summary>
-/// ID_18 リストに複数の要素がある場合に、末尾イテレータを渡して、削除した際の挙動
-/// </summary>
+/**
+ * @brief ID_18 リストに複数の要素がある場合に、末尾イテレータを渡して、削除した際の挙動
+ */
 TEST(LinkedListTest, RemoveLastOnMultipleElementsListTest)
 {
 	LinkedList<int> list;
@@ -438,9 +438,9 @@ TEST(LinkedListTest, RemoveLastOnMultipleElementsListTest)
 	EXPECT_FALSE(list.Remove(list.End()));
 }
 
-/// <summary>
-/// ID_19 リストに複数の要素がある場合に、先頭でも末尾でもないイテレータを渡して削除した際の挙動
-/// </summary>
+/**
+ * @brief ID_19 リストに複数の要素がある場合に、先頭でも末尾でもないイテレータを渡して削除した際の挙動
+ */
 TEST(LinkedListTest, RemoveMiddleElementTest)
 {
 	LinkedList<int> list;
@@ -465,9 +465,9 @@ TEST(LinkedListTest, RemoveMiddleElementTest)
 	EXPECT_TRUE(CheckList(list, expected, 2));
 }
 
-/// <summary>
-/// ID_20 ConstIteratorを渡して、削除を行った際の挙動
-/// </summary>
+/**
+ * @brief ID_20 ConstIteratorを渡して、削除を行った際の挙動
+ */
 TEST(LinkedListTest, RemoveWithConstIteratorTest)
 {
 	LinkedList<int> list;
@@ -488,9 +488,9 @@ TEST(LinkedListTest, RemoveWithConstIteratorTest)
 	EXPECT_TRUE(CheckList(list, expected, 2));
 }
 
-/// <summary>
-/// ID_21 不正なイテレータを渡して、削除した際の挙動
-/// </summary>
+/**
+ * @brief ID_21 不正なイテレータを渡して、削除した際の挙動
+ */
 TEST(LinkedListTest, RemoveWithInvalidIteratorTest)
 {
 	// リストの参照がないイテレータ
@@ -521,9 +521,9 @@ TEST(LinkedListTest, RemoveWithInvalidIteratorTest)
 
 #pragma region 先頭イテレータの取得
 
-/// <summary>
-/// ID_23 リストが空である場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_23 リストが空である場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginOnEmptyListTest)
 {
 	LinkedList<int> list;
@@ -535,9 +535,9 @@ TEST(LinkedListTest, BeginOnEmptyListTest)
 	EXPECT_EQ(it, list.End());
 }
 
-/// <summary>
-/// ID_24 リストに要素が一つある場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_24 リストに要素が一つある場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginOnNonEmptyListTest)
 {
 	LinkedList<int> list;
@@ -550,9 +550,9 @@ TEST(LinkedListTest, BeginOnNonEmptyListTest)
 	EXPECT_EQ(10, *it);
 }
 
-/// <summary>
-/// ID_25 リストに二つ以上の要素がある場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_25 リストに二つ以上の要素がある場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginOnMultipleElementsListTest)
 {
 	LinkedList<int> list;
@@ -567,9 +567,9 @@ TEST(LinkedListTest, BeginOnMultipleElementsListTest)
 	EXPECT_EQ(10, *it);
 }
 
-/// <summary>
-/// ID_26 データの挿入を行った後に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_26 データの挿入を行った後に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginAfterInsertTest)
 {
 	//先頭に挿入
@@ -616,9 +616,9 @@ TEST(LinkedListTest, BeginAfterInsertTest)
 	}
 }
 
-/// <summary>
-/// ID_27 データの削除を行った後に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_27 データの削除を行った後に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginAfterRemoveTest)
 {
 	// 先頭に削除
@@ -663,9 +663,9 @@ TEST(LinkedListTest, BeginAfterRemoveTest)
 
 #pragma region 先頭コンストイテレータの取得
 
-/// <summary>
-/// ID_29 リストが空である場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_29 リストが空である場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginConstOnEmptyListTest)
 {
 	LinkedList<int> list;
@@ -677,9 +677,9 @@ TEST(LinkedListTest, BeginConstOnEmptyListTest)
 	EXPECT_EQ(it, list.CEnd());
 }
 
-/// <summary>
-/// ID_30 リストに要素が一つある場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_30 リストに要素が一つある場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginConstOnNonEmptyListTest)
 {
 	LinkedList<int> list;
@@ -692,9 +692,9 @@ TEST(LinkedListTest, BeginConstOnNonEmptyListTest)
 	EXPECT_EQ(10, *it);
 }
 
-/// <summary>
-/// ID_31 リストに二つ以上の要素がある場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_31 リストに二つ以上の要素がある場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginConstOnMultipleElementsListTest)
 {
 	LinkedList<int> list;
@@ -709,9 +709,9 @@ TEST(LinkedListTest, BeginConstOnMultipleElementsListTest)
 	EXPECT_EQ(10, *it);
 }
 
-/// <summary>
-/// ID_32 データの挿入を行った後に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_32 データの挿入を行った後に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginConstAfterInsertTest)
 {
 	//先頭に挿入
@@ -756,9 +756,9 @@ TEST(LinkedListTest, BeginConstAfterInsertTest)
 	}
 }
 
-/// <summary>
-/// ID_33 データの削除を行った後に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_33 データの削除を行った後に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, BeginConstAfterRemoveTest)
 {
 	// 先頭に削除
@@ -808,9 +808,9 @@ TEST(LinkedListTest, BeginConstAfterRemoveTest)
 
 #pragma region 末尾イテレータの取得
 
-/// <summary>
-/// ID_35 リストが空である場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_35 リストが空である場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndOnEmptyListTest)
 {
 	LinkedList<int> list;
@@ -822,9 +822,9 @@ TEST(LinkedListTest, EndOnEmptyListTest)
 	EXPECT_EQ(it, list.End());
 }
 
-/// <summary>
-/// ID_36 リストに要素が一つある場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_36 リストに要素が一つある場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndOnNonEmptyListTest)
 {
 	LinkedList<int> list;
@@ -836,9 +836,9 @@ TEST(LinkedListTest, EndOnNonEmptyListTest)
 	EXPECT_EQ(it, list.End());
 }
 
-/// <summary>
-/// ID_37 リストに二つ以上の要素がある場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_37 リストに二つ以上の要素がある場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndOnMultipleElementsListTest)
 {
 	LinkedList<int> list;
@@ -852,9 +852,9 @@ TEST(LinkedListTest, EndOnMultipleElementsListTest)
 	EXPECT_EQ(it, list.End());
 }
 
-/// <summary>
-/// ID_38 データの挿入を行った後に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_38 データの挿入を行った後に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndAfterInsertTest)
 {
 	//先頭に挿入
@@ -906,9 +906,9 @@ TEST(LinkedListTest, EndAfterInsertTest)
 	}
 }
 
-/// <summary>
-/// ID_39 データの削除を行った後に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_39 データの削除を行った後に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndAfterRemoveTest)
 {
 	// 先頭に削除
@@ -960,9 +960,9 @@ TEST(LinkedListTest, EndAfterRemoveTest)
 
 #pragma region 末尾コンストイテレータの取得
 
-/// <summary>
-/// ID_41 リストが空である場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_41 リストが空である場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndConstOnEmptyListTest)
 {
 	LinkedList<int> list;
@@ -974,9 +974,9 @@ TEST(LinkedListTest, EndConstOnEmptyListTest)
 	EXPECT_EQ(it, list.CEnd());
 }
 
-/// <summary>
-/// ID_42 リストに要素が一つある場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_42 リストに要素が一つある場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndConstOnNonEmptyListTest)
 {
 	LinkedList<int> list;
@@ -988,9 +988,9 @@ TEST(LinkedListTest, EndConstOnNonEmptyListTest)
 	EXPECT_EQ(it, list.CEnd());
 }
 
-/// <summary>
-/// ID_43 リストに二つ以上の要素がある場合に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_43 リストに二つ以上の要素がある場合に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndConstOnMultipleElementsListTest)
 {
 	LinkedList<int> list;
@@ -1004,9 +1004,9 @@ TEST(LinkedListTest, EndConstOnMultipleElementsListTest)
 	EXPECT_EQ(it, list.CEnd());
 }
 
-/// <summary>
-/// ID_44 データの挿入を行った後に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_44 データの挿入を行った後に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndConstAfterInsertTest)
 {
 	//先頭に挿入
@@ -1057,9 +1057,9 @@ TEST(LinkedListTest, EndConstAfterInsertTest)
 	}
 }
 
-/// <summary>
-/// ID_45 データの削除を行った後に、呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_45 データの削除を行った後に、呼び出した際の挙動
+ */
 TEST(LinkedListTest, EndConstAfterRemoveTest)
 {
 	// 先頭に削除
@@ -1110,9 +1110,9 @@ TEST(LinkedListTest, EndConstAfterRemoveTest)
 
 #pragma region イテレータの指す要素を取得する
 
-/// <summary>
-/// ID_0 リストの参照がない状態で呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_0 リストの参照がない状態で呼び出した際の挙動
+ */
 TEST(LinkedListTest, DereferenceInvalidIteratorTest)
 {
 #ifndef NDEBUG
@@ -1123,9 +1123,9 @@ TEST(LinkedListTest, DereferenceInvalidIteratorTest)
 #endif
 }
 
-/// <summary>
-/// ID_1 Iteratorから取得した要素に対して、値の代入が行えるかをチェック
-/// </summary>
+/**
+ * @brief ID_1 Iteratorから取得した要素に対して、値の代入が行えるかをチェック
+ */
 TEST(LinkedListTest, IteratorModifyValueTest)
 {
 	LinkedList<int> list;
@@ -1139,9 +1139,9 @@ TEST(LinkedListTest, IteratorModifyValueTest)
 	EXPECT_EQ(20, *it);
 }
 
-/// <summary>
-/// ID_3 リストが空の際の、先頭イテレータに対して呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_3 リストが空の際の、先頭イテレータに対して呼び出した際の挙動
+ */
 TEST(LinkedListTest, DereferenceBeginOnEmptyListTest)
 {
 #ifndef NDEBUG
@@ -1154,9 +1154,9 @@ TEST(LinkedListTest, DereferenceBeginOnEmptyListTest)
 #endif
 }
 
-/// <summary>
-/// ID_4 末尾イテレータに対して呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_4 末尾イテレータに対して呼び出した際の挙動
+ */
 TEST(LinkedListTest, DereferenceEndIteratorTest)
 {
 #ifndef NDEBUG
@@ -1175,9 +1175,9 @@ TEST(LinkedListTest, DereferenceEndIteratorTest)
 
 #pragma region イテレータをリストの末尾に向かって一つ進める
 
-/// <summary>
-/// ID_5 リストの参照がない状態で呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_5 リストの参照がない状態で呼び出した際の挙動
+ */
 TEST(LinkedListTest, IncrementInvalidIteratorTest)
 {
 #ifndef NDEBUG
@@ -1188,9 +1188,9 @@ TEST(LinkedListTest, IncrementInvalidIteratorTest)
 #endif
 }
 
-/// <summary>
-/// ID_6 リストが空の際の、先頭イテレータに対して呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_6 リストが空の際の、先頭イテレータに対して呼び出した際の挙動
+ */
 TEST(LinkedListTest, IncrementBeginOnEmptyListTest)
 {
 #ifndef NDEBUG
@@ -1202,9 +1202,9 @@ TEST(LinkedListTest, IncrementBeginOnEmptyListTest)
 #endif
 }
 
-/// <summary>
-/// ID_7 末尾イテレータに対して呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_7 末尾イテレータに対して呼び出した際の挙動
+ */
 TEST(LinkedListTest, IncrementEndIteratorTest)
 {
 #ifndef NDEBUG
@@ -1220,9 +1220,9 @@ TEST(LinkedListTest, IncrementEndIteratorTest)
 #endif
 }
 
-/// <summary>
-/// ID_8 リストに二つ以上の要素がある場合に呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_8 リストに二つ以上の要素がある場合に呼び出した際の挙動
+ */
 TEST(LinkedListTest, IncrementOnMultipleElementsListTest)
 {
 	LinkedList<int> list;
@@ -1246,9 +1246,9 @@ TEST(LinkedListTest, IncrementOnMultipleElementsListTest)
 	EXPECT_EQ(it, list.End());
 }
 
-/// <summary>
-/// ID_9 前置インクリメントを行った際の挙動(++演算子オーバーロードで実装した場合)
-/// </summary>
+/**
+ * @brief ID_9 前置インクリメントを行った際の挙動(++演算子オーバーロードで実装した場合)
+ */
 TEST(LinkedListTest, PreIncrementReturnValueTest)
 {
 	LinkedList<int> list;
@@ -1267,9 +1267,9 @@ TEST(LinkedListTest, PreIncrementReturnValueTest)
 	EXPECT_EQ(20, *it);
 }
 
-/// <summary>
-/// ID_10 後置インクリメントを行った際の挙動(++演算子オーバーロードで実装した場合)
-/// </summary>
+/**
+ * @brief ID_10 後置インクリメントを行った際の挙動(++演算子オーバーロードで実装した場合)
+ */
 TEST(LinkedListTest, PostIncrementReturnValueTest)
 {
 	LinkedList<int> list;
@@ -1292,9 +1292,9 @@ TEST(LinkedListTest, PostIncrementReturnValueTest)
 
 #pragma region イテレータをリストの先頭に向かって一つ進める
 
-/// <summary>
-/// ID_11 リストの参照がない状態で呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_11 リストの参照がない状態で呼び出した際の挙動
+ */
 TEST(LinkedListTest, DecrementInvalidIteratorTest)
 {
 #ifndef NDEBUG
@@ -1305,9 +1305,9 @@ TEST(LinkedListTest, DecrementInvalidIteratorTest)
 #endif
 }
 
-/// <summary>
-/// ID_12 リストが空の際の、末尾イテレータに対して呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_12 リストが空の際の、末尾イテレータに対して呼び出した際の挙動
+ */
 TEST(LinkedListTest, DecrementEndOnEmptyListTest)
 {
 #ifndef NDEBUG
@@ -1319,9 +1319,9 @@ TEST(LinkedListTest, DecrementEndOnEmptyListTest)
 #endif
 }
 
-/// <summary>
-/// ID_13 先頭イテレータに対して呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_13 先頭イテレータに対して呼び出した際の挙動
+ */
 TEST(LinkedListTest, DecrementBeginIteratorTest)
 {
 #ifndef NDEBUG
@@ -1336,9 +1336,9 @@ TEST(LinkedListTest, DecrementBeginIteratorTest)
 #endif
 }
 
-/// <summary>
-/// ID_14 リストに二つ以上の要素がある場合に呼び出した際の挙動
-/// </summary>
+/**
+ * @brief ID_14 リストに二つ以上の要素がある場合に呼び出した際の挙動
+ */
 TEST(LinkedListTest, DecrementOnMultipleElementsListTest)
 {
 	LinkedList<int> list;
@@ -1359,9 +1359,9 @@ TEST(LinkedListTest, DecrementOnMultipleElementsListTest)
 	EXPECT_EQ(10, *it);
 }
 
-/// <summary>
-/// ID_15 前置デクリメントを行った際の挙動( --演算子オーバーロードで実装した場合 )
-/// </summary>
+/**
+ * @brief ID_15 前置デクリメントを行った際の挙動( --演算子オーバーロードで実装した場合 )
+ */
 TEST(LinkedListTest, PreDecrementReturnValueTest)
 {
 	LinkedList<int> list;
@@ -1381,9 +1381,9 @@ TEST(LinkedListTest, PreDecrementReturnValueTest)
 	EXPECT_EQ(10, *it);
 }
 
-/// <summary>
-/// ID_16 後置デクリメントを行った際の挙動( --演算子オーバーロードで実装した場合 )
-/// </summary>
+/**
+ * @brief ID_16 後置デクリメントを行った際の挙動( --演算子オーバーロードで実装した場合 )
+ */
 TEST(LinkedListTest, PostDecrementReturnValueTest)
 {
 	LinkedList<int> list;
@@ -1407,9 +1407,9 @@ TEST(LinkedListTest, PostDecrementReturnValueTest)
 
 #pragma region イテレータのコピーを行う
 
-/// <summary>
-/// ID_18 コピーコンストラクト後の値がコピー元と等しいことをチェック
-/// </summary>
+/**
+ * @brief ID_18 コピーコンストラクト後の値がコピー元と等しいことをチェック
+ */
 TEST(LinkedListTest, CopyConstructorTest)
 {
 	LinkedList<int> list;
@@ -1431,9 +1431,9 @@ TEST(LinkedListTest, CopyConstructorTest)
 
 #pragma region イテレータの代入を行う
 
-/// <summary>
-/// ID_20 代入後の値がコピー元と等しいことをチェック
-/// </summary>
+/**
+ * @brief ID_20 代入後の値がコピー元と等しいことをチェック
+ */
 TEST(LinkedListTest, AssignmentOperatorTest)
 {
 	LinkedList<int> list;
@@ -1456,9 +1456,9 @@ TEST(LinkedListTest, AssignmentOperatorTest)
 
 #pragma region 二つのイテレータが同一のものであるか 比較を行う
 
-/// <summary>
-/// ID_21 リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
-/// </summary>
+/**
+ * @brief ID_21 リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
+ */
 TEST(LinkedListTest, CompareBeginAndEndOnEmptyListTest)
 {
 	LinkedList<int> list;
@@ -1470,9 +1470,9 @@ TEST(LinkedListTest, CompareBeginAndEndOnEmptyListTest)
 	EXPECT_TRUE(beginIt == endIt);
 }
 
-/// <summary>
-/// ID_22 同一のイテレータを比較した際の挙動
-/// </summary>
+/**
+ * @brief ID_22 同一のイテレータを比較した際の挙動
+ */
 TEST(LinkedListTest, CompareSameIteratorTest)
 {
 	LinkedList<int> list;
@@ -1485,9 +1485,9 @@ TEST(LinkedListTest, CompareSameIteratorTest)
 	EXPECT_TRUE(it1 == it2);
 }
 
-/// <summary>
-/// ID_23 異なるイテレータを比較した際の挙動
-/// </summary>
+/**
+ * @brief ID_23 異なるイテレータを比較した際の挙動
+ */
 TEST(LinkedListTest, CompareDifferentIteratorTest)
 {
 	LinkedList<int> list;
@@ -1506,9 +1506,9 @@ TEST(LinkedListTest, CompareDifferentIteratorTest)
 
 #pragma region 二つのイテレータが異なるものであるか 比較を行う
 
-/// <summary>
-/// ID_24 リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
-/// </summary>
+/**
+ * @brief ID_24 リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
+ */
 TEST(LinkedListTest, CompareNotEqualBeginAndEndOnEmptyListTest)
 {
 	LinkedList<int> list;
@@ -1520,9 +1520,9 @@ TEST(LinkedListTest, CompareNotEqualBeginAndEndOnEmptyListTest)
 	EXPECT_FALSE(it1 != it2);
 }
 
-/// <summary>
-/// ID_25 同一のイテレータを比較した際の挙動
-/// </summary>
+/**
+ * @brief ID_25 同一のイテレータを比較した際の挙動
+ */
 TEST(LinkedListTest, CompareNotEqualSameIteratorTest)
 {
 	LinkedList<int> list;
@@ -1535,9 +1535,9 @@ TEST(LinkedListTest, CompareNotEqualSameIteratorTest)
 	EXPECT_FALSE(it1 != it2);
 }
 
-/// <summary>
-/// ID_26 異なるイテレータを比較した際の挙動
-/// </summary>
+/**
+ * @brief ID_26 異なるイテレータを比較した際の挙動
+ */
 TEST(LinkedListTest, CompareNotEqualDifferentIteratorTest)
 {
 	LinkedList<int> list;

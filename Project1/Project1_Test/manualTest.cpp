@@ -4,9 +4,9 @@
 
 #pragma region データ数の取得テスト
 
-/// <summary>
-/// ID_8 const のメソッドであるか
-/// </summary>
+/**
+ * @brief ID_8 const のメソッドであるか
+ */
 TEST(LinkedListManualTest, ConstMethodTest)
 {
 #if defined TT_TEST_IS_CONST_LIST
@@ -26,9 +26,9 @@ TEST(LinkedListManualTest, ConstMethodTest)
 
 #pragma region データの挿入テスト
 
-/// <summary>
-/// ID_15 非constのメソッドであるか
-/// </summary>
+/**
+ * @brief ID_15 非constのメソッドであるか
+ */
 TEST(LinkedListManualTest, InsertIsNotConstMethodTest)
 {
 	LinkedList<int> list;
@@ -48,9 +48,9 @@ TEST(LinkedListManualTest, InsertIsNotConstMethodTest)
 
 #pragma region データの削除
 
-/// <summary>
-/// ID_22 非constのメソッドであるか
-/// </summary>
+/**
+ * @brief ID_22 非constのメソッドであるか
+ */
 TEST(LinkedListManualTest, RemoveIsNotConstMethodTest)
 {
 	LinkedList<int> list;
@@ -71,9 +71,9 @@ TEST(LinkedListManualTest, RemoveIsNotConstMethodTest)
 
 #pragma region 先頭イテレータの取得
 
-/// <summary>
-/// ID_28 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
-/// </summary>
+/**
+ * @brief ID_28 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
+ */
 TEST(LinkedListManualTest, BeginConstCheckTest)
 {
 	LinkedList<int> list;
@@ -92,9 +92,9 @@ TEST(LinkedListManualTest, BeginConstCheckTest)
 
 #pragma region 先頭コンストイテレータの取得
 
-/// <summary>
-/// ID_34 constのメソッドであるか
-/// </summary>
+/**
+ * @brief ID_34 constのメソッドであるか
+ */
 TEST(LinkedListManualTest, ConstIteratorBeginConstCheckTest)
 {
 	LinkedList<int> list;
@@ -113,9 +113,9 @@ TEST(LinkedListManualTest, ConstIteratorBeginConstCheckTest)
 
 #pragma region 末尾イテレータの取得
 
-/// <summary>
-/// ID_40 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
-/// </summary>
+/**
+ * @brief ID_40 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
+ */
 TEST(LinkedListManualTest, EndCheckTest)
 {
 	LinkedList<int> list;
@@ -135,9 +135,9 @@ TEST(LinkedListManualTest, EndCheckTest)
 
 #pragma region 末尾コンストイテレータの取得
 
-/// <summary>
-/// ID_46 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
-/// </summary>
+/**
+ * @brief ID_46 constのリストから、ConstIteratorでないIteratorの取得が行えない事をチェック
+ */
 TEST(LinkedListManualTest, EndConstCheckTest)
 {
 	LinkedList<int> list;
@@ -155,9 +155,9 @@ TEST(LinkedListManualTest, EndConstCheckTest)
 
 #pragma region イテレータの指す要素を取得する
 
-/// <summary>
-/// ID_2 ConstIteratorから取得した要素に対して、値の代入が行えないかをチェック
-/// </summary>
+/**
+ * @brief ID_2 ConstIteratorから取得した要素に対して、値の代入が行えないかをチェック
+ */
 TEST(LinkedListManualTest, ConstIteratorCannotModifyValueTest)
 {
 	LinkedList<int> list;
@@ -178,9 +178,9 @@ TEST(LinkedListManualTest, ConstIteratorCannotModifyValueTest)
 
 #pragma region イテレータのコピーを行う
 
-/// <summary>
-/// ID_17 ConstIteratorから、Iteratorのコピーが作成されないかをチェック
-/// </summary>
+/**
+ * @brief ID_17 ConstIteratorから、Iteratorのコピーが作成されないかをチェック
+ */
 TEST(LinkedListManualTest, CannotCopyConstIteratorToIteratorTest)
 {
 	LinkedList<int> list;
@@ -200,9 +200,9 @@ TEST(LinkedListManualTest, CannotCopyConstIteratorToIteratorTest)
 
 #pragma region イテレータの代入を行う
 
-/// <summary>
-/// ID_19 IteratorにConstIteratorを代入できない事をチェック
-/// </summary>
+/**
+ * @brief ID_19 IteratorにConstIteratorを代入できない事をチェック
+ */
 TEST(LinkedListManualTest, CannotAssignConstIteratorToIteratorTest)
 {
 	LinkedList<int> list;

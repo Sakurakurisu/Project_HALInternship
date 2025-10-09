@@ -1,244 +1,226 @@
 #pragma once
 #include <cassert>
 
-/// <summary>
-/// 双方向リストのテンプレートクラス
-/// </summary>
-/// <typeparam name="T">リストに格納する要素の型</typeparam>
+/**
+ * @brief 双方向リストのテンプレートクラス
+ * @tparam T リストに格納する要素の型
+ */
 template <typename T>
 class LinkedList
 {
 private:
-	// ノード構造体
+	/**
+	 * @brief ノード構造体
+	 */
 	struct Node
 	{
 		T data;
 		Node* prev;
 		Node* next;
 
-		// データを持つノード用
-		Node(const T& value) : data(value), prev(nullptr), next(nullptr)
-		{
-		}
+		/**
+		 * @brief データを持つノード用コンストラクタ
+		 * @param value ノードに格納する値
+		 */
+		Node(const T& value);
 
-		// ダミーノード用
-		Node() : data(T()), prev(nullptr), next(nullptr)
-		{
-		}
+		/**
+		 * @brief ダミーノード用デフォルトコンストラクタ
+		 */
+		Node();
 	};
 
-	// ダミーノード（末尾の次を指す）
-	Node* mDummy;
+	Node* mDummy; ///< ダミーノード（末尾の次を指す）
 	size_t mCount;
 
 public:
-	/// <summary>
-	/// コンストイテレータクラス
-	/// </summary>
+	/**
+	 * @brief コンストイテレータクラス
+	 */
 	class ConstIterator
 	{
 	private:
-		const Node* mNode;
-		const LinkedList<T>* mList;
+		const Node* mNode; ///< イテレータが指すノード
+		const LinkedList<T>* mList; ///< イテレータが属するリスト
 		friend class LinkedList<T>;
 
-		ConstIterator(const Node* node, const LinkedList<T>* list) : mNode(node), mList(list)
-		{
-		}
+		/**
+		 * @brief プライベートコンストラクタ
+		 * @param node 指すノード
+		 * @param list 属するリスト
+		 */
+		ConstIterator(const Node* node, const LinkedList<T>* list);
 
 	public:
-		ConstIterator() : mNode(nullptr), mList(nullptr)
-		{
-		}
+		/**
+		 * @brief デフォルトコンストラクタ
+		 */
+		ConstIterator();
 
-		/// <summary>
-		/// イテレータの指す要素を取得（const版）
-		/// </summary>
-		const T& operator*() const
-		{
-			assert(mNode);
-			assert(mList && mNode != mList->mDummy);
-			return mNode->data;
-		}
+		/**
+		 * @brief イテレータの指す要素を取得（const版）
+		 * @return 要素へのconst参照
+		 */
+		const T& operator*() const;
 
-		/// <summary>
-		/// アロー演算子（const版）
-		/// </summary>
-		const T* operator->() const
-		{
-			assert(mNode);
-			return &(mNode->data);
-		}
+		/**
+		 * @brief アロー演算子（const版）
+		 * @return 要素へのconstポインタ
+		 */
+		const T* operator->() const;
 
-		/// <summary>
-		/// 前置インクリメント
-		/// </summary>
-		ConstIterator& operator++()
-		{
-			assert(mNode);
-			assert(mList && mNode != mList->mDummy);
-			mNode = mNode->next;
-			return *this;
-		}
+		/**
+		 * @brief 前置インクリメント演算子
+		 * @return インクリメント後のイテレータへの参照
+		 */
+		ConstIterator& operator++();
 
-		/// <summary>
-		/// 後置インクリメント
-		/// </summary>
-		ConstIterator operator++(int)
-		{
-			assert(mNode);
-			assert(mList && mNode != mList->mDummy);
-			ConstIterator temp = *this;
-			mNode = mNode->next;
-			return temp;
-		}
+		/**
+		 * @brief 後置インクリメント演算子
+		 * @return インクリメント前のイテレータのコピー
+		 */
+		ConstIterator operator++(int);
 
-		/// <summary>
-		/// 前置デクリメント
-		/// </summary>
-		ConstIterator& operator--()
-		{
-			assert(mNode);
-			// デクリメント後がダミーノードを指さないことを確認（--Begin()を防ぐ）
-			assert(mList && mNode->prev != mList->mDummy);
-			mNode = mNode->prev;
-			return *this;
-		}
+		/**
+		 * @brief 前置デクリメント演算子
+		 * @return デクリメント後のイテレータへの参照
+		 */
+		ConstIterator& operator--();
 
-		/// <summary>
-		/// 後置デクリメント
-		/// </summary>
-		ConstIterator operator--(int)
-		{
-			assert(mNode);
-			// デクリメント後がダミーノードを指さないことを確認（--Begin()を防ぐ）
-			assert(mList && mNode->prev != mList->mDummy);
-			ConstIterator temp = *this;
-			mNode = mNode->prev;
-			return temp;
-		}
+		/**
+		 * @brief 後置デクリメント演算子
+		 * @return デクリメント前のイテレータのコピー
+		 */
+		ConstIterator operator--(int);
 
-		/// <summary>
-		/// 等価比較
-		/// </summary>
-		bool operator==(const ConstIterator& other) const
-		{
-			return mNode == other.mNode;
-		}
+		/**
+		 * @brief 等価比較演算子
+		 * @param other 比較対象のイテレータ
+		 * @return 等しい場合true
+		 */
+		bool operator==(const ConstIterator& other) const;
 
-		/// <summary>
-		/// 非等価比較
-		/// </summary>
-		bool operator!=(const ConstIterator& other) const
-		{
-			return mNode != other.mNode;
-		}
+		/**
+		 * @brief 非等価比較演算子
+		 * @param other 比較対象のイテレータ
+		 * @return 等しくない場合true
+		 */
+		bool operator!=(const ConstIterator& other) const;
 
-		/// <summary>
-		/// 代入演算子
-		/// </summary>
-		ConstIterator& operator=(const ConstIterator& other)
-		{
-			mNode = other.mNode;
-			mList = other.mList;
-			return *this;
-		}
+		/**
+		 * @brief 代入演算子
+		 * @param other 代入元のイテレータ
+		 * @return 代入後の自身への参照
+		 */
+		ConstIterator& operator=(const ConstIterator& other);
 	};
 
-	/// <summary>
-	/// イテレータクラス
-	/// </summary>
+	/**
+	 * @brief イテレータクラス
+	 */
 	class Iterator : public ConstIterator
 	{
 	private:
 		friend class LinkedList<T>;
 
-		Iterator(Node* node, const LinkedList<T>* list) : ConstIterator(node, list)
-		{
-		}
+		/**
+		 * @brief プライベートコンストラクタ
+		 * @param node 指すノード
+		 * @param list 属するリスト
+		 */
+		Iterator(Node* node, const LinkedList<T>* list);
 
 	public:
-		Iterator() : ConstIterator(nullptr, nullptr)
-		{
-		}
+		/**
+		 * @brief デフォルトコンストラクタ
+		 */
+		Iterator();
 
-		/// <summary>
-		/// イテレータの指す要素を取得（非const版）
-		/// </summary>
-		T& operator*()
-		{
-			return const_cast<T&>(ConstIterator::operator*());
-		}
+		/**
+		 * @brief イテレータの指す要素を取得（非const版）
+		 * @return 要素への参照
+		 */
+		T& operator*();
 
-		/// <summary>
-		/// アロー演算子
-		/// </summary>
-		T* operator->()
-		{
-			return const_cast<T*>(ConstIterator::operator->());
-		}
+		/**
+		 * @brief アロー演算子（非const版）
+		 * @return 要素へのポインタ
+		 */
+		T* operator->();
 	};
 
+	/**
+	 * @brief コンストラクタ
+	 */
 	LinkedList();
 
+	/**
+	 * @brief デストラクタ
+	 */
 	~LinkedList();
 
-
-	/// <summary>
-	/// イテレータが指す位置の前に要素を挿入
-	/// </summary>
-	/// <param name="it">挿入位置を指すコンストイテレータ</param>
-	/// <param name="value">挿入する値</param>
-	/// <returns>挿入に成功した場合はtrue、失敗した場合はfalse</returns>
+	/**
+	 * @brief イテレータが指す位置の前に要素を挿入
+	 * @param it 挿入位置を指すコンストイテレータ
+	 * @param value 挿入する値
+	 * @return 挿入に成功した場合true、失敗した場合false
+	 */
 	bool Insert(const ConstIterator& it, const T& value);
 
-	/// <summary>
-	/// イテレータが指す位置の要素を削除
-	/// </summary>
-	/// <param name="it">削除する要素を指すコンストイテレータ</param>
-	/// <returns>削除に成功した場合はtrue、失敗した場合はfalse</returns>
+	/**
+	 * @brief イテレータが指す位置の要素を削除
+	 * @param it 削除する要素を指すコンストイテレータ
+	 * @return 削除に成功した場合true、失敗した場合false
+	 */
 	bool Remove(const ConstIterator& it);
 
-	/// <summary>
-	/// 先頭イテレータ取得
-	/// </summary>
-	/// <returns>先頭を指すイテレータ</returns>
+	/**
+	 * @brief 先頭イテレータ取得
+	 * @return 先頭を指すイテレータ
+	 */
 	Iterator Begin();
 
-	/// <summary>
-	/// 末尾の次を指すイテレータ取得
-	/// </summary>
-	/// <returns>末尾の次を指すイテレータ</returns>
+	/**
+	 * @brief 末尾の次を指すイテレータ取得
+	 * @return 末尾の次を指すイテレータ
+	 */
 	Iterator End();
 
-	/// <summary>
-	/// 先頭コンストイテレータ取得（明示的）
-	/// </summary>
-	/// <returns>先頭を指すコンストイテレータ</returns>
+	/**
+	 * @brief 先頭コンストイテレータ取得（明示的）
+	 * @return 先頭を指すコンストイテレータ
+	 */
 	ConstIterator CBegin() const;
 
-	/// <summary>
-	/// 末尾の次を指すコンストイテレータ取得（明示的）
-	/// </summary>
-	/// <returns>末尾の次を指すコンストイテレータ</returns>
+	/**
+	 * @brief 末尾の次を指すコンストイテレータ取得（明示的）
+	 * @return 末尾の次を指すコンストイテレータ
+	 */
 	ConstIterator CEnd() const;
 
-	/// <summary>
-	/// リスト内の要素数を取得
-	/// </summary>
-	/// <returns>要素数</returns>
+	/**
+	 * @brief リスト内の要素数を取得
+	 * @return 要素数
+	 */
 	size_t Count() const;
 
-	/// <summary>
-	/// リストに要素が存在するかチェック
-	/// </summary>
-	/// <returns>要素が存在する場合はtrue、空の場合はfalse</returns>
+	/**
+	 * @brief リストに要素が存在するかチェック
+	 * @return 要素が存在する場合true、空の場合false
+	 */
 	bool Any() const;
 
-	/// <summary>
-	/// リストのすべての要素を削除してメモリを解放
-	/// </summary>
+	/**
+	 * @brief リストのすべての要素を削除してメモリを解放
+	 */
 	void Clean();
+
+	/**
+	 * @brief 2つのコンストイテレータが指すノードの位置を交換
+	 * @param a 交換する最初のコンストイテレータ
+	 * @param b 交換する2番目のコンストイテレータ
+	 */
+	void Swap(const ConstIterator& a, const ConstIterator& b);
 };
 
 // テンプレート関数の実装をインクルード
