@@ -17,14 +17,10 @@ private:
 		Node* next;
 
 		// データを持つノード用
-		Node(const T& value) : data(value), prev(nullptr), next(nullptr)
-		{
-		}
+		Node(const T& value);
 
 		// ダミーノード用
-		Node() : data(T()), prev(nullptr), next(nullptr)
-		{
-		}
+		Node();
 	};
 
 	// ダミーノード（末尾の次を指す）
@@ -42,107 +38,55 @@ public:
 		const LinkedList<T>* mList;
 		friend class LinkedList<T>;
 
-		ConstIterator(const Node* node, const LinkedList<T>* list) : mNode(node), mList(list)
-		{
-		}
+		ConstIterator(const Node* node, const LinkedList<T>* list);
 
 	public:
-		ConstIterator() : mNode(nullptr), mList(nullptr)
-		{
-		}
+		ConstIterator();
 
 		/// <summary>
 		/// イテレータの指す要素を取得（const版）
 		/// </summary>
-		const T& operator*() const
-		{
-			assert(mNode);
-			assert(mList && mNode != mList->mDummy);
-			return mNode->data;
-		}
+		const T& operator*() const;
 
 		/// <summary>
 		/// アロー演算子（const版）
 		/// </summary>
-		const T* operator->() const
-		{
-			assert(mNode);
-			return &(mNode->data);
-		}
+		const T* operator->() const;
 
 		/// <summary>
 		/// 前置インクリメント
 		/// </summary>
-		ConstIterator& operator++()
-		{
-			assert(mNode);
-			assert(mList && mNode != mList->mDummy);
-			mNode = mNode->next;
-			return *this;
-		}
+		ConstIterator& operator++();
 
 		/// <summary>
 		/// 後置インクリメント
 		/// </summary>
-		ConstIterator operator++(int)
-		{
-			assert(mNode);
-			assert(mList && mNode != mList->mDummy);
-			ConstIterator temp = *this;
-			mNode = mNode->next;
-			return temp;
-		}
+		ConstIterator operator++(int);
 
 		/// <summary>
 		/// 前置デクリメント
 		/// </summary>
-		ConstIterator& operator--()
-		{
-			assert(mNode);
-			// デクリメント後がダミーノードを指さないことを確認（--Begin()を防ぐ）
-			assert(mList && mNode->prev != mList->mDummy);
-			mNode = mNode->prev;
-			return *this;
-		}
+		ConstIterator& operator--();
 
 		/// <summary>
 		/// 後置デクリメント
 		/// </summary>
-		ConstIterator operator--(int)
-		{
-			assert(mNode);
-			// デクリメント後がダミーノードを指さないことを確認（--Begin()を防ぐ）
-			assert(mList && mNode->prev != mList->mDummy);
-			ConstIterator temp = *this;
-			mNode = mNode->prev;
-			return temp;
-		}
+		ConstIterator operator--(int);
 
 		/// <summary>
 		/// 等価比較
 		/// </summary>
-		bool operator==(const ConstIterator& other) const
-		{
-			return mNode == other.mNode;
-		}
+		bool operator==(const ConstIterator& other) const;
 
 		/// <summary>
 		/// 非等価比較
 		/// </summary>
-		bool operator!=(const ConstIterator& other) const
-		{
-			return mNode != other.mNode;
-		}
+		bool operator!=(const ConstIterator& other) const;
 
 		/// <summary>
 		/// 代入演算子
 		/// </summary>
-		ConstIterator& operator=(const ConstIterator& other)
-		{
-			mNode = other.mNode;
-			mList = other.mList;
-			return *this;
-		}
+		ConstIterator& operator=(const ConstIterator& other);
 	};
 
 	/// <summary>
@@ -153,30 +97,20 @@ public:
 	private:
 		friend class LinkedList<T>;
 
-		Iterator(Node* node, const LinkedList<T>* list) : ConstIterator(node, list)
-		{
-		}
+		Iterator(Node* node, const LinkedList<T>* list);
 
 	public:
-		Iterator() : ConstIterator(nullptr, nullptr)
-		{
-		}
+		Iterator();
 
 		/// <summary>
 		/// イテレータの指す要素を取得（非const版）
 		/// </summary>
-		T& operator*()
-		{
-			return const_cast<T&>(ConstIterator::operator*());
-		}
+		T& operator*();
 
 		/// <summary>
 		/// アロー演算子
 		/// </summary>
-		T* operator->()
-		{
-			return const_cast<T*>(ConstIterator::operator->());
-		}
+		T* operator->();
 	};
 
 	LinkedList();
