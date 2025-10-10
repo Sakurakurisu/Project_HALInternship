@@ -220,7 +220,7 @@ public:
 	 * @param a 交換する最初のコンストイテレータ
 	 * @param b 交換する2番目のコンストイテレータ
 	 */
-	void Swap(const ConstIterator& a, const ConstIterator& b);
+	void Swap(ConstIterator& a, ConstIterator& b);
 };
 
 // テンプレート関数の実装をインクルード
