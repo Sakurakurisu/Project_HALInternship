@@ -123,10 +123,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="sort.h" />
+    <ClInclude Include="quickSort.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="sort.inl" />
+    <None Include="quickSort.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

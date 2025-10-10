@@ -5,7 +5,7 @@
 
 #include "linkedList.h"
 #include "playerScore.h"
-#include "../Project1_Sort//sort.h"
+#include "../Project1_Sort/quickSort.h"
 
 int main()
 {
@@ -57,7 +57,7 @@ int main()
 	list.Insert(list.End(), 6);
 	list.Insert(list.End(), 4);
 
-	Sort::QuickSort(list);
+	QuickSort::Sort(list);
 
 	for (auto it = list.Begin(); it != list.End(); ++it)
 	{

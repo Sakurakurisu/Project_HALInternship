@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sort.h">
+    <ClInclude Include="quickSort.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="sort.inl">
+    <None Include="quickSort.inl">
       <Filter>头文件</Filter>
     </None>
   </ItemGroup>

@@ -350,9 +350,9 @@ void LinkedList<T>::Swap(ConstIterator& a, ConstIterator& b)
 		nodeB->next = nextA;
 	}
 
-	//auto temp = a;
-	//a = b;
-	//b = temp;
+	auto temp = a;
+	a = b;
+	b = temp;
 }
 
 #pragma endregion
